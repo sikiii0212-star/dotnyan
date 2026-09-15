@@ -1,0 +1,8244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#252344">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>どっとにゃん家計簿</title>
+
+/* =========================
+   📱 APP PAGE SCREEN
+========================= */
+
+.app-page,
+#catPage{
+  min-height:calc(100vh - 80px);
+  box-sizing:border-box;
+}
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:#eeeaf7;
+  color:#252344;
+  font-family:"Courier New",monospace;
+  font-weight:bold;
+}
+
+.app{
+  max-width:520px;
+  margin:0 auto;
+  min-height:100vh;
+  background:#f8f6ff;
+  padding-bottom:90px;
+}
+
+.header{
+  background:#252344;
+  color:#fff;
+  padding:20px 18px;
+  border-bottom:5px solid #aaa4d8;
+}
+
+.logo{
+  font-size:20px;
+  letter-spacing:2px;
+}
+
+.subtitle{
+  font-size:9px;
+  color:#d9d5ff;
+  margin-top:5px;
+}
+
+.month{
+  margin-top:15px;
+  font-size:11px;
+}
+
+.card{
+  margin:12px;
+  padding:15px;
+  background:#fff;
+  border:3px solid #252344;
+  box-shadow:4px 4px 0 #aaa4d8;
+}
+
+.section-title{
+  font-size:14px;
+  margin-bottom:12px;
+}
+
+.cat-area{
+  text-align:center;
+  padding:20px 10px;
+  background:#fff0f7;
+  border:3px dotted #252344;
+}
+
+.cat{
+  font-size:70px;
+  line-height:1;
+  margin:10px;
+}
+
+.cat-text{
+  font-size:11px;
+}
+
+.expbar{
+  height:12px;
+  background:#ddd9ea;
+  border:2px solid #252344;
+  margin-top:8px;
+}
+
+.expfill{
+  height:100%;
+  background:#ff9fca;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.stat{
+  padding:12px 8px;
+  border:3px solid #252344;
+  background:#faf9ff;
+}
+
+.stat-label{
+  font-size:9px;
+  color:#77729b;
+}
+
+.stat-value{
+  font-size:16px;
+  margin-top:5px;
+}
+
+.income{
+  background:#effff5;
+}
+
+.expense{
+  background:#fff0f5;
+}
+
+.saving{
+  background:#f1f0ff;
+}
+
+.free{
+  background:#fff8df;
+}
+
+.buttons{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+button{
+  font-family:inherit;
+  font-weight:bold;
+  border:3px solid #252344;
+  background:#fff;
+  color:#252344;
+  padding:11px 6px;
+  cursor:pointer;
+  box-shadow:3px 3px 0 #aaa4d8;
+}
+
+button:active{
+  transform:translate(2px,2px);
+  box-shadow:1px 1px 0 #aaa4d8;
+}
+
+.btn-expense{
+  background:#ffd9e8;
+}
+
+.btn-income{
+  background:#d9f8e5;
+}
+
+.btn-saving{
+  background:#ddd9ff;
+}
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.record{
+  border:2px solid #252344;
+  padding:10px;
+  background:#faf9ff;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+
+.record-left{
+  min-width:0;
+}
+
+.record-main{
+  font-size:11px;
+}
+
+.record-memo{
+  font-size:9px;
+  color:#77729b;
+  margin-top:3px;
+}
+
+.record-right{
+  text-align:right;
+  white-space:nowrap;
+}
+
+.record-amount{
+  font-size:13px;
+}
+
+.delete{
+  border:2px solid #252344;
+  padding:4px 7px;
+  font-size:8px;
+  margin-top:5px;
+  box-shadow:none;
+}
+
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(37,35,68,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  padding:20px;
+}
+
+.modal{
+  width:100%;
+  max-width:420px;
+  background:#fff;
+  border:4px solid #252344;
+  box-shadow:7px 7px 0 #aaa4d8;
+  padding:18px;
+}
+
+.modal-title{
+  font-size:16px;
+  margin-bottom:15px;
+}
+
+label{
+  display:block;
+  font-size:10px;
+  margin-top:10px;
+  margin-bottom:5px;
+}
+
+input,
+select{
+  width:100%;
+  padding:11px;
+  border:3px solid #252344;
+  background:#faf9ff;
+  font-family:inherit;
+  font-weight:bold;
+  color:#252344;
+}
+
+.modal-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:15px;
+}
+
+.cancel{
+  background:#eeeaf7;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:25px;
+  transform:translateX(-50%);
+  background:#252344;
+  color:white;
+  border:3px solid #fff;
+  padding:11px 15px;
+  font-size:10px;
+  display:none;
+  z-index:200;
+  box-shadow:4px 4px 0 #aaa4d8;
+}
+
+.account-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+}
+
+.account{
+  border:3px solid #252344;
+  padding:12px;
+  background:#faf9ff;
+}
+
+.account-name{
+  font-size:10px;
+  color:#77729b;
+}
+
+.account-balance{
+  font-size:18px;
+  margin:5px 0 8px;
+}
+
+.account-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+
+.total-assets{
+  margin-top:12px;
+  padding:12px;
+  border:3px dotted #252344;
+  background:#fff8df;
+  text-align:center;
+}
+
+.total-label{
+  font-size:9px;
+  color:#77729b;
+}
+
+.total-value{
+  font-size:20px;
+  margin-top:5px;
+}
+
+.goal{
+  border:3px solid #252344;
+  padding:12px;
+  background:#faf9ff;
+  margin-bottom:9px;
+}
+
+.goal-top{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.goal-name{
+  font-size:11px;
+}
+
+.goal-percent{
+  font-size:10px;
+}
+
+.goal-bar{
+  height:14px;
+  border:2px solid #252344;
+  background:#e3e0ed;
+  margin:8px 0;
+}
+
+.goal-fill{
+  height:100%;
+  background:#ffafd0;
+}
+
+.goal-info{
+  font-size:9px;
+  color:#77729b;
+}
+
+.goal-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin-top:8px;
+}
+
+.room-card{
+  overflow:hidden;
+}
+
+.room{
+  position:relative;
+  height:330px;
+  border:4px solid #252344;
+  background:#f6eafa;
+  overflow:hidden;
+}
+
+.wall{
+  position:absolute;
+  inset:0 0 75px 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 29px,
+      rgba(120,110,160,.08) 30px
+    );
+}
+
+.floor{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:75px;
+  background:#d8c9e4;
+  border-top:4px solid #252344;
+}
+
+.window{
+  position:absolute;
+  top:25px;
+  left:25px;
+  width:85px;
+  height:75px;
+  background:#bfe9ff;
+  border:4px solid #252344;
+}
+
+.window:before,
+.window:after{
+  content:"";
+  position:absolute;
+  background:#252344;
+}
+
+.window:before{
+  width:4px;
+  height:100%;
+  left:50%;
+}
+
+.window:after{
+  height:4px;
+  width:100%;
+  top:50%;
+}
+
+.sun{
+  position:absolute;
+  top:10px;
+  right:15px;
+  font-size:22px;
+}
+
+.room-cat{
+  position:absolute;
+  bottom:55px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:68px;
+  z-index:5;
+}
+
+.furniture{
+  position:absolute;
+  font-size:45px;
+  cursor:pointer;
+  user-select:none;
+  z-index:4;
+}
+
+.room-bed{
+  bottom:55px;
+  left:20px;
+}
+
+.room-plant{
+  bottom:55px;
+  right:20px;
+}
+
+.room-table{
+  bottom:45px;
+  left:42%;
+}
+
+.room-sofa{
+  bottom:55px;
+  right:90px;
+}
+
+.room-tv{
+  top:35px;
+  right:20px;
+}
+
+.room-plush{
+  bottom:20px;
+  left:115px;
+}
+
+.room-star{
+  top:120px;
+  right:45%;
+}
+
+.room-heart{
+  top:130px;
+  left:45%;
+}
+
+.room-paw{
+  top:170px;
+  right:25%;
+}
+
+.room-info{
+  padding:10px;
+  margin-top:8px;
+  border:2px dotted #252344;
+  background:#fff;
+  font-size:9px;
+  text-align:center;
+}
+
+.level-card{
+  text-align:center;
+  background:#f0edff;
+}
+
+.level{
+  font-size:28px;
+}
+
+.exp-text{
+  font-size:10px;
+  margin-top:5px;
+}
+
+.unlock{
+  font-size:9px;
+  color:#77729b;
+  margin-top:7px;
+}
+
+.bottom-nav{
+  position:fixed;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:520px;
+  background:#252344;
+  border-top:4px solid #aaa4d8;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  z-index:50;
+}
+
+.nav-item{
+  color:#fff;
+  text-align:center;
+  padding:10px 3px;
+  font-size:8px;
+}
+
+.nav-icon{
+  font-size:17px;
+  margin-bottom:3px;
+}
+
+.levelup-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(37,35,68,.75);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:300;
+  padding:20px;
+}
+
+.levelup{
+  width:100%;
+  max-width:360px;
+  background:#fff;
+  border:5px solid #252344;
+  box-shadow:8px 8px 0 #ffafd0;
+  text-align:center;
+  padding:25px 15px;
+}
+
+.levelup-cat{
+  font-size:75px;
+  margin:10px;
+}
+
+.levelup-title{
+  font-size:20px;
+}
+
+.levelup-text{
+  font-size:11px;
+  margin:10px 0 15px;
+}
+
+.small-note{
+  font-size:9px;
+  color:#77729b;
+}
+
+.empty{
+  text-align:center;
+  padding:15px;
+  font-size:10px;
+  color:#77729b;
+}
+
+/* =========================
+   STEP17 🏠 HOME TOP
+========================= */
+
+.home-top-card{
+  border:3px solid #252344;
+  border-radius:22px;
+  background:#fff;
+  padding:20px;
+  margin:16px;
+  box-shadow:6px 6px 0 #252344;
+}
+
+.home-top-title{
+  font-size:12px;
+  color:#817ca5;
+  margin-bottom:6px;
+}
+
+.home-free-money{
+  font-size:34px;
+  font-weight:bold;
+  margin:4px 0 12px;
+}
+
+.home-money-label{
+  font-size:11px;
+  color:#817ca5;
+}
+
+.home-mini-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:14px;
+}
+
+.home-mini-card{
+  border:2px solid #252344;
+  border-radius:15px;
+  padding:12px;
+  background:#faf9ff;
+}
+
+.home-mini-title{
+  font-size:10px;
+  color:#817ca5;
+  margin-bottom:4px;
+}
+
+.home-mini-value{
+  font-size:17px;
+  font-weight:bold;
+}
+
+
+/* =========================
+   DOT NYAN APP SCREEN LAYOUT
+========================= */
+.app-page{
+  width:100%;
+  max-width:520px;
+  min-height:calc(100vh - 130px);
+  margin:0 auto;
+  padding:16px 0 100px;
+  background:#f8f6ff;
+  box-sizing:border-box;
+}
+
+#appPageRecord, #appPageGoal{
+  padding-top:16px;
+}
+
+#appHeader{
+  width:100%;
+  max-width:520px;
+  margin:0 auto;
+}
+
+.app-page-title{
+  padding:4px 16px 12px;
+}
+
+.app-page-title-main{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.app-page-title-sub{
+  font-size:10px;
+  color:#817ca5;
+  margin-top:5px;
+}
+
+#appPageHome .home-top-card{
+  margin-top:0;
+}
+
+#appPageHome .home-cat-card{
+  border:3px solid #252344;
+  border-radius:20px;
+  background:#fff0f7;
+  margin:16px;
+  padding:18px;
+  text-align:center;
+  box-shadow:5px 5px 0 #252344;
+}
+
+#appPageHome .home-cat-icon{
+  font-size:64px;
+  line-height:1;
+  margin:6px 0 10px;
+}
+
+#appPageHome .home-cat-name{
+  font-size:18px;
+}
+
+#appPageHome .home-cat-message{
+  font-size:11px;
+  color:#817ca5;
+  margin-top:6px;
+}
+
+#appPageHome .home-quick-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:16px;
+}
+
+#appPageHome .home-quick-grid button{
+  width:100%;
+}
+
+#appPageHome .home-card-slot,
+#appPageGoal .goal-card-slot,
+#appPageRecord .record-card-slot{
+  width:100%;
+}
+
+.bottom-nav{
+  position:fixed !important;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:520px;
+  z-index:200;
+  box-sizing:border-box;
+}
+
+@media (min-width:521px){
+  .bottom-nav{
+    border-left:3px solid #252344;
+    border-right:3px solid #252344;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div
+  id="appPageHome"
+  class="app-page"
+  style="display:block;"
+>
+
+<!-- =========================
+     STEP17 🏠 HOME TOP
+========================= -->
+
+<div class="home-top-card">
+
+  <div class="home-top-title">
+    🐾 今月つかえるお金
+  </div>
+
+  <div
+    id="homeFreeMoney"
+    class="home-free-money"
+  >
+    ¥0
+  </div>
+
+  <div class="home-money-label">
+    今月の収入 − 今月の支出
+  </div>
+
+  <div class="home-mini-grid">
+
+    <div class="home-mini-card">
+
+      <div class="home-mini-title">
+        💰 今月の収入
+      </div>
+
+      <div
+        id="homeIncome"
+        class="home-mini-value"
+      >
+        ¥0
+      </div>
+
+    </div>
+
+
+    <div class="home-mini-card">
+
+      <div class="home-mini-title">
+        💸 今月の支出
+      </div>
+
+      <div
+        id="homeExpense"
+        class="home-mini-value"
+      >
+        ¥0
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+
+<div
+  id="appPageRecord"
+  class="app-page"
+  style="display:none;"
+>
+  <div
+    style="
+      font-size:22px;
+      font-weight:bold;
+      margin-bottom:8px;
+    "
+  >
+    📖 RECORD
+  </div>
+
+  <div
+    style="
+      font-size:11px;
+      color:#817ca5;
+    "
+  >
+    お金の記録を管理するページにゃ🐾
+  </div>
+</div>
+
+
+<div
+  id="appPageGoal"
+  class="app-page"
+  style="display:none;"
+>
+  <div
+    style="
+      font-size:22px;
+      font-weight:bold;
+      margin-bottom:8px;
+    "
+  >
+    🎯 GOAL
+  </div>
+
+  <div
+    style="
+      font-size:11px;
+      color:#817ca5;
+    "
+  >
+    お金の目標を管理するページにゃ🐾
+  </div>
+</div>
+
+
+<div
+  id="catPage"
+  style="
+    display:none;
+    padding:16px;
+  "
+>
+
+  <div
+    style="
+      font-size:20px;
+      font-weight:bold;
+      margin-bottom:5px;
+    "
+  >
+    🐈 にゃんこ
+  </div>
+
+
+  <div
+    style="
+      font-size:11px;
+      color:#777;
+      margin-bottom:16px;
+    "
+  >
+    一緒に家計簿を頑張ってくれる相棒たち🐾
+  </div>
+
+
+  <!-- 今の猫 -->
+
+  <div
+    style="
+      border:3px solid #252344;
+      border-radius:20px;
+      background:#fff;
+      padding:20px;
+      text-align:center;
+      box-shadow:5px 5px 0 #252344;
+      margin-bottom:18px;
+    "
+  >
+
+    <div
+      style="
+        font-size:12px;
+        color:#817ca5;
+        margin-bottom:5px;
+      "
+    >
+      🐾 今いっしょにいる子
+    </div>
+
+    <div
+      id="catPageIcon"
+      style="
+        font-size:70px;
+        line-height:1;
+        margin:10px 0;
+      "
+    >
+      🐈‍⬛
+    </div>
+
+    <div
+      id="catPageName"
+      style="
+        font-size:20px;
+        font-weight:bold;
+      "
+    >
+      にゃんこ
+    </div>
+
+    <div
+      style="
+        font-size:12px;
+        color:#817ca5;
+        margin-top:5px;
+      "
+    >
+      Lv.<span id="catPageLevel">1</span>
+    </div>
+
+
+    <button
+      type="button"
+      onclick="changeCatName()"
+      style="
+        margin-top:14px;
+        border:2px solid #252344;
+        border-radius:12px;
+        padding:9px 16px;
+        background:#f1eafa;
+        font-weight:bold;
+        cursor:pointer;
+      "
+    >
+      ✏️ 名前を変更
+    </button>
+
+  </div>
+
+
+  <!-- お迎えした猫 -->
+
+  <div
+    style="
+      font-size:16px;
+      font-weight:bold;
+      margin-bottom:10px;
+    "
+  >
+    🐾 お迎えしたにゃんこ
+  </div>
+
+  <div
+    id="catPageCollection"
+    style="
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    "
+  ></div>
+
+</div>
+
+
+<div class="app">
+
+  <div class="header">
+    <div class="logo">🐾 DOT NYAN</div>
+    <div class="subtitle">どっとにゃん家計簿</div>
+    <div class="month" id="month"></div>
+  </div>
+
+  <!-- CAT -->
+  <div class="card">
+    <div class="cat-area">
+
+      <div id="cat" class="cat">🐈‍⬛</div>
+
+      <div class="cat-text" id="catMessage">
+        今日もいっしょにがんばるにゃ！
+      </div>
+
+      <div class="level-card" style="margin-top:15px;padding:10px;">
+        <div>
+          ⭐ にゃんこEXP
+        </div>
+
+        <div class="level">
+          Lv.<span id="level">1</span>
+        </div>
+
+        <div class="expbar">
+          <div
+            id="expFill"
+            class="expfill"
+            style="width:0%"
+          ></div>
+        </div>
+
+        <div class="exp-text">
+          <span id="exp">0</span> EXP
+        </div>
+
+        <div class="unlock" id="unlockText"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="card">
+
+    <div class="section-title">
+      💰 今月のお金
+    </div>
+
+    <div class="stats">
+
+      <div class="stat income">
+        <div class="stat-label">収入</div>
+        <div class="stat-value">
+          ¥<span id="income">0</span>
+        </div>
+      </div>
+
+      <div class="stat expense">
+        <div class="stat-label">支出</div>
+        <div class="stat-value">
+          ¥<span id="expense">0</span>
+        </div>
+      </div>
+
+      <div class="stat saving">
+        <div class="stat-label">貯金</div>
+        <div class="stat-value">
+          ¥<span id="saving">0</span>
+        </div>
+      </div>
+
+      <div class="stat free">
+        <div class="stat-label">自由に使える</div>
+        <div class="stat-value">
+          ¥<span id="free">0</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RECORD BUTTONS -->
+  <div class="card">
+
+    <div class="section-title">
+      📝 お金を記録
+    </div>
+
+    <div class="buttons">
+
+      <button
+        class="btn-expense"
+        onclick="openModal('expense')"
+      >
+        💸 支出
+      </button>
+
+      <button
+        class="btn-income"
+        onclick="openModal('income')"
+      >
+        💰 収入
+      </button>
+
+      <button
+        class="btn-saving"
+        onclick="openModal('saving')"
+      >
+        🏦 貯金
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- HISTORY -->
+  <div class="card">
+
+    <div class="section-title">
+      📖 最近の記録
+    </div>
+
+    <div id="history" class="list"></div>
+
+  </div>
+
+  <!-- ACCOUNTS -->
+  <div class="card">
+
+    <div class="section-title">
+      🏦 お金の居場所
+    </div>
+
+    <div class="small-note" style="margin-bottom:10px;">
+      お金がどこにあるかを管理するにゃ！
+    </div>
+
+    <div id="accounts" class="account-grid"></div>
+
+    <div class="total-assets">
+      <div class="total-label">
+        💰 今あるお金ぜんぶ
+      </div>
+
+      <div class="total-value">
+        ¥<span id="totalAssets">0</span>
+      </div>
+    </div>
+
+    <button
+      style="width:100%;margin-top:10px;"
+      onclick="openTransferModal()"
+    >
+      🔄 お金を移動する
+    </button>
+
+  </div>
+
+  <!-- GOALS -->
+  <div class="card">
+
+    <div class="section-title">
+      🎯 お金の目的
+    </div>
+
+    <div class="small-note" style="margin-bottom:10px;">
+      目標を作って、にゃんこと一緒に貯めるにゃ！
+    </div>
+
+    <div id="goals"></div>
+
+    <button
+      style="width:100%;"
+      onclick="openGoalModal()"
+    >
+      ＋ 新しい目標を作る
+    </button>
+
+  </div>
+
+  <!-- ROOM -->
+  <div class="card room-card">
+
+    <div class="section-title">
+      🏠 にゃんこのお部屋
+    </div>
+
+    <div class="small-note" style="margin-bottom:10px;">
+      レベルが上がるとお部屋もどんどん育つにゃ！
+    </div>
+
+    <div class="room">
+
+      <div class="wall"></div>
+      <div class="floor"></div>
+
+      <div class="window"></div>
+      <div class="sun">☀️</div>
+
+      <div
+        id="roomBed"
+        class="furniture room-bed"
+        onclick="toggleFurniture('bed')"
+        title="ベッド"
+      >
+        🛏️
+      </div>
+
+      <div
+        id="roomPlant"
+        class="furniture room-plant"
+        onclick="toggleFurniture('plant')"
+        title="植物"
+      >
+        🪴
+      </div>
+
+      <div
+        id="roomTable"
+        class="furniture room-table"
+        onclick="toggleFurniture('table')"
+      >
+        🪑
+      </div>
+
+      <div
+        id="roomSofa"
+        class="furniture room-sofa"
+        onclick="toggleFurniture('sofa')"
+      >
+        🛋️
+      </div>
+
+      <div
+        id="roomTv"
+        class="furniture room-tv"
+        onclick="toggleFurniture('tv')"
+      >
+        📺
+      </div>
+
+      <div
+        id="roomPlush"
+        class="furniture room-plush"
+        onclick="toggleFurniture('plush')"
+      >
+        🧸
+      </div>
+
+      <div
+        id="roomStar"
+        class="furniture room-star"
+        onclick="toggleFurniture('star')"
+      >
+        ⭐
+      </div>
+
+      <div
+        id="roomHeart"
+        class="furniture room-heart"
+        onclick="toggleFurniture('heart')"
+      >
+        💗
+      </div>
+
+      <div
+        id="roomPaw"
+        class="furniture room-paw"
+        onclick="toggleFurniture('paw')"
+      >
+        🐾
+      </div>
+
+      <div
+        id="roomCat"
+        class="room-cat"
+      >
+        🐈‍⬛
+      </div>
+
+    </div>
+
+    <div class="room-info">
+      にゃんこ度：
+      <span id="roomPercent">0</span>%
+      ／
+      ROOM Lv.<span id="roomLevel">1</span>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- RECORD MODAL -->
+<div id="recordModal" class="modal-bg">
+
+  <div class="modal">
+
+    <div class="modal-title" id="modalTitle">
+      💸 支出を記録
+    </div>
+
+    <label>金額</label>
+
+    <input
+      id="amountInput"
+      type="number"
+      placeholder="例：3000"
+    >
+
+    <label>カテゴリ</label>
+
+    <select id="categoryInput">
+
+      <option value="🎀 遊び">🎀 遊び</option>
+      <option value="💇🏻‍♀️ 美容">💇🏻‍♀️ 美容</option>
+      <option value="🐰 ちいかわ">🐰 ちいかわ</option>
+      <option value="🎰 ガチャ">🎰 ガチャ</option>
+      <option value="🍚 食費">🍚 食費</option>
+      <option value="🛍️ 買い物">🛍️ 買い物</option>
+      <option value="✈️ 旅行">✈️ 旅行</option>
+      <option value="💼 給料">💼 給料</option>
+      <option value="その他">その他</option>
+
+    </select>
+
+    <label>メモ</label>
+
+    <input
+      id="memoInput"
+      type="text"
+      placeholder="例：彼氏とごはん"
+    >
+
+    <div class="modal-buttons">
+
+      <button
+        class="cancel"
+        onclick="closeModal()"
+      >
+        キャンセル
+      </button>
+
+      <button
+        onclick="saveRecord()"
+      >
+        保存する
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- TRANSFER MODAL -->
+<div id="transferModal" class="modal-bg">
+
+  <div class="modal">
+
+    <div class="modal-title">
+      🔄 お金を移動する
+    </div>
+
+    <label>移動元</label>
+
+    <select id="fromAccount">
+      <option value="salary">💳 給料口座</option>
+      <option value="savings">🏦 貯金口座</option>
+      <option value="cash">📁 家の現金ファイル</option>
+    </select>
+
+    <label>移動先</label>
+
+    <select id="toAccount">
+      <option value="savings">🏦 貯金口座</option>
+      <option value="salary">💳 給料口座</option>
+      <option value="cash">📁 家の現金ファイル</option>
+    </select>
+
+    <label>金額</label>
+
+    <input
+      id="transferAmount"
+      type="number"
+      placeholder="例：10000"
+    >
+
+    <div class="modal-buttons">
+
+      <button
+        class="cancel"
+        onclick="closeTransferModal()"
+      >
+        キャンセル
+      </button>
+
+      <button
+        onclick="saveTransfer()"
+      >
+        移動する
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- GOAL MODAL -->
+<div id="goalModal" class="modal-bg">
+
+  <div class="modal">
+
+    <div class="modal-title">
+      🎯 新しい目標
+    </div>
+
+    <label>目標の名前</label>
+
+    <input
+      id="goalName"
+      type="text"
+      placeholder="例：11月旅行"
+    >
+
+    <label>目標金額</label>
+
+    <input
+      id="goalTarget"
+      type="number"
+      placeholder="例：60000"
+    >
+
+    <label>今すでに貯めている金額</label>
+
+    <input
+      id="goalCurrent"
+      type="number"
+      placeholder="0"
+    >
+
+    <div class="modal-buttons">
+
+      <button
+        class="cancel"
+        onclick="closeGoalModal()"
+      >
+        キャンセル
+      </button>
+
+      <button
+        onclick="saveGoal()"
+      >
+        作成する
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- GOAL ADD MODAL -->
+<div id="goalAddModal" class="modal-bg">
+
+  <div class="modal">
+
+    <div class="modal-title">
+      💰 目標に追加
+    </div>
+
+    <div
+      id="goalAddName"
+      style="font-size:11px;margin-bottom:10px;"
+    ></div>
+
+    <input
+      id="goalAddAmount"
+      type="number"
+      placeholder="例：5000"
+    >
+
+    <div class="modal-buttons">
+
+      <button
+        class="cancel"
+        onclick="closeGoalAddModal()"
+      >
+        キャンセル
+      </button>
+
+      <button
+        onclick="saveGoalAdd()"
+      >
+        貯める！
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- LEVEL UP -->
+<div id="levelupBg" class="levelup-bg">
+
+  <div class="levelup">
+
+    <div class="levelup-cat" id="levelupCat">
+      🐈‍⬛
+    </div>
+
+    <div class="levelup-title">
+      🎉 LEVEL UP! 🎉
+    </div>
+
+    <div class="levelup-text">
+      にゃんこが成長したにゃ！
+    </div>
+
+    <div style="font-size:18px;">
+      Lv.<span id="newLevel">2</span>
+    </div>
+
+    <button
+      style="margin-top:15px;width:100%;"
+      onclick="closeLevelUp()"
+    >
+      うれしいにゃ！🐾
+    </button>
+
+  </div>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
+
+
+<!-- BOTTOM NAV -->
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+
+  <div
+    class="nav-item"
+    onclick="showAppPage('home')"
+  >
+    <div class="nav-icon">🏠</div>
+    HOME
+  </div>
+
+  <div
+    class="nav-item"
+    onclick="showAppPage('record')"
+  >
+    <div class="nav-icon">📖</div>
+    RECORD
+  </div>
+
+  <div
+    class="nav-item"
+    onclick="showAppPage('goal')"
+  >
+    <div class="nav-icon">🎯</div>
+    GOAL
+  </div>
+
+  <div
+    class="nav-item"
+    onclick="showAppPage('cat')"
+  >
+    <div class="nav-icon">🐈</div>
+    CAT
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   DATA
+========================= */
+
+let data = {};
+
+try{
+
+  data =
+    JSON.parse(
+      localStorage.getItem("dotnyan")
+    ) || {};
+
+}catch(error){
+
+  data = {};
+
+}
+
+
+if(!Array.isArray(data.records)){
+  data.records = [];
+}
+
+
+if(!data.accounts){
+
+  data.accounts = {
+    salary:0,
+    savings:0,
+    cash:0
+  };
+
+}
+
+
+if(!data.transfers){
+  data.transfers = [];
+}
+
+
+if(!Array.isArray(data.goals)){
+  data.goals = [];
+}
+
+
+if(!data.cat){
+
+  data.cat = {
+    exp:0,
+    level:1,
+    totalSaved:0
+  };
+
+}
+
+
+if(typeof data.cat.exp !== "number"){
+  data.cat.exp = 0;
+}
+
+if(typeof data.cat.level !== "number"){
+  data.cat.level = 1;
+}
+
+if(typeof data.cat.totalSaved !== "number"){
+  data.cat.totalSaved = 0;
+}
+
+
+if(!data.room){
+
+  data.room = {
+    items:[]
+  };
+
+}
+
+
+if(!Array.isArray(data.room.items)){
+  data.room.items = [];
+}
+
+
+/* =========================
+   STEP6 🐈 CAT COLLECTION
+========================= */
+
+const catCollection = [
+
+  /* =========================
+     🐾 最初から選べるにゃんこ
+  ========================= */
+
+  {
+    id:"black",
+    name:"くろねこ",
+    icon:"🐈‍⬛",
+    level:1
+  },
+
+  {
+    id:"white",
+    name:"しろねこ",
+    icon:"🐈",
+    level:1
+  },
+
+  {
+    id:"gray",
+    name:"グレーねこ",
+    icon:"🩶",
+    level:1
+  },
+
+  {
+    id:"hachi",
+    name:"ハチワレ",
+    icon:"🐱",
+    level:1
+  },
+
+  {
+    id:"calico",
+    name:"みけねこ",
+    icon:"🤎",
+    level:1
+  },
+
+  /* =========================
+     ⭐ Lv20で追加されるにゃんこ
+  ========================= */
+
+  {
+    id:"tora",
+    name:"茶トラ",
+    icon:"🐈",
+    level:20
+  },
+
+  {
+    id:"sabatora",
+    name:"サバトラ",
+    icon:"🐈",
+    level:20
+  },
+
+  {
+    id:"bicolor",
+    name:"ぶちねこ",
+    icon:"🐈",
+    level:20
+  },
+
+  {
+    id:"longblack",
+    name:"長毛くろねこ",
+    icon:"🐈‍⬛",
+    level:20
+  },
+
+  {
+    id:"cream",
+    name:"クリームねこ",
+    icon:"🐱",
+    level:20
+  },
+
+  /* =========================
+     🌟 Lv30で追加される特別にゃんこ
+  ========================= */
+
+  {
+    id:"special",
+    name:"スペシャルにゃんこ",
+    icon:"😻",
+    level:30
+  }
+
+];
+
+
+if(
+  !data.catSkin ||
+  !catCollection.some(
+    cat => cat.id === data.catSkin
+  )
+){
+
+  data.catSkin = "black";
+
+}
+
+/* =========================
+   STEP14 🐈 CAT ADOPTION
+========================= */
+
+if(!Array.isArray(data.ownedCats)){
+
+  data.ownedCats = [
+    data.catSkin || "black"
+  ];
+
+  saveData();
+
+}
+
+
+function isCatOwned(catId){
+
+  return data.ownedCats.includes(
+    catId
+  );
+
+}
+
+
+function adoptCat(catId){
+
+  const cat =
+    catCollection.find(
+      item => item.id === catId
+    );
+
+  if(!cat){
+    return;
+  }
+
+
+  /* すでにお迎え済み */
+
+  if(isCatOwned(catId)){
+
+    data.catSkin =
+      catId;
+
+    saveData();
+
+    renderCat();
+    renderCatProgress();
+    renderCatCollection();
+
+    showToast(
+      cat.name +
+      "に切り替えたにゃ🐾"
+    );
+
+    return;
+  }
+
+
+  /* レベル不足 */
+
+  if(
+    Number(data.cat.level || 1)
+    < Number(cat.level || 1)
+  ){
+
+    showToast(
+      "Lv" +
+      cat.level +
+      "でお迎えできるにゃ🐈"
+    );
+
+    return;
+  }
+
+
+  /* お迎え */
+
+  data.ownedCats.push(
+    catId
+  );
+
+  data.catSkin =
+    catId;
+
+  saveData();
+
+  renderCat();
+  renderCatProgress();
+  renderCatCollection();
+
+  showToast(
+    cat.name +
+    "をお迎えしたにゃ！🐾💗"
+  );
+
+}
+
+
+function renderCatCollection(){
+
+  const area =
+    document.getElementById(
+      "catCollectionGrid"
+    );
+
+  if(!area){
+    return;
+  }
+
+
+  let html = "";
+
+
+  catCollection.forEach(
+    cat => {
+
+      const owned =
+        isCatOwned(cat.id);
+
+      const unlocked =
+        Number(data.cat.level || 1)
+        >= Number(cat.level || 1);
+
+      const selected =
+        data.catSkin === cat.id;
+
+
+      html += `
+        <div style="
+          border:2px solid #252344;
+          border-radius:16px;
+          padding:14px 8px;
+          text-align:center;
+          background:${
+            selected
+              ? "#f1eafa"
+              : "#fff"
+          };
+          opacity:${
+            unlocked ? "1" : ".55"
+          };
+        ">
+
+          <div style="
+            font-size:48px;
+            margin-bottom:6px;
+          ">
+            ${
+              unlocked
+                ? cat.icon
+                : "🔒"
+            }
+          </div>
+
+          <div style="
+            font-weight:bold;
+            font-size:13px;
+          ">
+            ${cat.name}
+          </div>
+
+          <div style="
+            font-size:10px;
+            opacity:.7;
+            margin:5px 0 10px;
+          ">
+            ${
+              owned
+                ? selected
+                  ? "いま一緒にいる🐾"
+                  : "お迎え済み"
+                : "Lv" +
+                  cat.level +
+                  "で解放"
+            }
+          </div>
+
+          ${
+            unlocked
+              ? `
+                <button
+                  onclick="
+                    adoptCat('${cat.id}')
+                  "
+                  style="
+                    border:2px solid #252344;
+                    border-radius:10px;
+                    padding:7px 10px;
+                    background:#fff;
+                    font-weight:bold;
+                    cursor:pointer;
+                    font-size:11px;
+                  "
+                >
+                  ${
+                    owned
+                      ? "この子にする🐾"
+                      : "お迎えする🐈"
+                  }
+                </button>
+              `
+              : `
+                <div style="
+                  font-size:10px;
+                  padding:7px;
+                  opacity:.7;
+                ">
+                  もう少し頑張ろう🐾
+                </div>
+              `
+          }
+
+        </div>
+      `;
+
+    }
+  );
+
+
+  area.innerHTML =
+    html;
+
+}
+
+
+/* =========================
+   SAVE
+========================= */
+
+function saveData(){
+
+  localStorage.setItem(
+    "dotnyan",
+    JSON.stringify(data)
+  );
+
+}
+
+
+/* =========================
+   UTIL
+========================= */
+
+function yen(number){
+
+  return Number(number || 0)
+    .toLocaleString("ja-JP");
+
+}
+
+
+function showToast(message){
+
+  const toast =
+    document.getElementById("toast");
+
+  toast.textContent = message;
+
+  toast.style.display = "block";
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer =
+    setTimeout(() => {
+
+      toast.style.display = "none";
+
+    },2200);
+
+}
+
+
+/* =========================
+   MONTH
+========================= */
+
+const now = new Date();
+
+document.getElementById("month").textContent =
+  now.getFullYear() +
+  "年" +
+  (now.getMonth()+1) +
+  "月";
+
+
+/* =========================
+   CAT
+========================= */
+
+function getSelectedCat(){
+
+  const selected =
+    catCollection.find(
+      cat =>
+        cat.id === data.catSkin
+    );
+
+  if(selected){
+    return selected.icon;
+  }
+
+  return "🐈‍⬛";
+
+}
+
+
+function getCat(){
+
+  return getSelectedCat();
+
+}
+
+
+function getCatMessage(){
+
+  const free =
+    calculateFree();
+
+  if(free < 0){
+
+    return "ちょっと使いすぎたにゃ…🥺";
+
+  }
+
+  if(data.cat.exp >= 1000){
+
+    return "すごいにゃ！かなり成長したにゃ！😻";
+
+  }
+
+  if(data.cat.totalSaved >= 50000){
+
+    return "貯金がんばっててえらいにゃ！💰";
+
+  }
+
+  return "今日もいっしょにがんばるにゃ！🐾";
+
+}
+
+
+function expNeeded(level){
+
+  return level * 100;
+
+}
+
+
+function addExp(amount){
+
+  const oldLevel =
+    data.cat.level;
+
+  data.cat.exp +=
+    Math.max(0,Number(amount || 0));
+
+  while(
+    data.cat.exp >=
+    expNeeded(data.cat.level)
+  ){
+
+    data.cat.exp -=
+      expNeeded(data.cat.level);
+
+    data.cat.level++;
+
+  }
+
+  saveData();
+
+  renderCat();
+  renderRoom();
+
+  if(
+    document.getElementById(
+      "catCollectionGrid"
+    )
+  ){
+
+    renderCatCollection();
+
+  }
+
+  if(
+    data.cat.level > oldLevel
+  ){
+
+    showLevelUp(
+      data.cat.level
+    );
+
+  }
+
+}
+
+
+function renderCat(){
+
+  document.getElementById("cat").textContent =
+    getCat();
+
+  document.getElementById("level").textContent =
+    data.cat.level;
+
+  document.getElementById("exp").textContent =
+    Math.floor(data.cat.exp);
+
+  const need =
+    expNeeded(data.cat.level);
+
+  const percent =
+    Math.min(
+      100,
+      (data.cat.exp / need) * 100
+    );
+
+  document.getElementById("expFill").style.width =
+    percent + "%";
+
+  document.getElementById("catMessage").textContent =
+    getCatMessage();
+
+  const next =
+    catCollection.find(
+      cat =>
+        cat.level >
+        data.cat.level
+    );
+
+  document.getElementById("unlockText").textContent =
+    next
+      ? "次の猫：Lv." + next.level + "で「" + next.name + "」解放"
+      : "すべての猫を解放したにゃ！🎉";
+
+  updateDisplayedCat();
+
+}
+
+
+/* =========================
+   LEVEL UP
+========================= */
+
+function showLevelUp(level){
+
+  document.getElementById(
+    "newLevel"
+  ).textContent = level;
+
+  document.getElementById(
+    "levelupCat"
+  ).textContent =
+    getCat();
+
+  document.getElementById(
+    "levelupBg"
+  ).style.display = "flex";
+
+}
+
+
+function closeLevelUp(){
+
+  document.getElementById(
+    "levelupBg"
+  ).style.display = "none";
+
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+function calculateIncome(){
+
+  return data.records
+    .filter(
+      r => r.type === "income"
+    )
+    .reduce(
+      (sum,r) =>
+        sum + Number(r.amount),
+      0
+    );
+
+}
+
+
+function calculateExpense(){
+
+  return data.records
+    .filter(
+      r => r.type === "expense"
+    )
+    .reduce(
+      (sum,r) =>
+        sum + Number(r.amount),
+      0
+    );
+
+}
+
+
+function calculateSaving(){
+
+  return data.records
+    .filter(
+      r => r.type === "saving"
+    )
+    .reduce(
+      (sum,r) =>
+        sum + Number(r.amount),
+      0
+    );
+
+}
+
+
+function calculateFree(){
+
+  return (
+    calculateIncome() -
+    calculateExpense() -
+    calculateSaving()
+  );
+
+}
+
+
+function updateSummary(){
+
+  document.getElementById("income").textContent =
+    yen(calculateIncome());
+
+  document.getElementById("expense").textContent =
+    yen(calculateExpense());
+
+  document.getElementById("saving").textContent =
+    yen(calculateSaving());
+
+  document.getElementById("free").textContent =
+    yen(calculateFree());
+
+}
+
+
+/* =========================
+   RECORD MODAL
+========================= */
+
+let currentType =
+  "expense";
+
+
+function openModal(type){
+
+  currentType = type;
+
+  const titles = {
+
+    expense:"💸 支出を記録",
+    income:"💰 収入を記録",
+    saving:"🏦 貯金を記録"
+
+  };
+
+  document.getElementById(
+    "modalTitle"
+  ).textContent =
+    titles[type];
+
+  document.getElementById(
+    "amountInput"
+  ).value = "";
+
+  document.getElementById(
+    "memoInput"
+  ).value = "";
+
+  document.getElementById(
+    "recordModal"
+  ).style.display = "flex";
+
+}
+
+
+function closeModal(){
+
+  document.getElementById(
+    "recordModal"
+  ).style.display = "none";
+
+}
+
+
+function saveRecord(){
+
+  const amount =
+    Number(
+      document.getElementById(
+        "amountInput"
+      ).value
+    );
+
+  if(!amount || amount <= 0){
+
+    showToast(
+      "金額を入力してにゃ！🐾"
+    );
+
+    return;
+
+  }
+
+  const category =
+    document.getElementById(
+      "categoryInput"
+    ).value;
+
+  const memo =
+    document.getElementById(
+      "memoInput"
+    ).value.trim();
+
+  const record = {
+
+    id:Date.now(),
+
+    type:currentType,
+
+    amount:amount,
+
+    category:category,
+
+    memo:memo,
+
+    date:new Date()
+      .toISOString()
+
+  };
+
+
+  data.records.unshift(record);
+
+
+  if(currentType === "saving"){
+
+    data.cat.totalSaved +=
+      amount;
+
+  }
+
+
+  addExp(
+    Math.max(
+      5,
+      Math.floor(amount / 100)
+    )
+  );
+
+
+  saveData();
+
+  updateSummary();
+
+  renderHistory();
+
+  closeModal();
+
+  showToast(
+    currentType === "expense"
+      ? "記録したにゃ！🐾"
+      : currentType === "income"
+      ? "収入を記録したにゃ！💰"
+      : "貯金えらいにゃ！🏦"
+  );
+
+}
+
+
+/* =========================
+   HISTORY
+========================= */
+
+function renderHistory(){
+
+  const history =
+    document.getElementById(
+      "history"
+    );
+
+  history.innerHTML = "";
+
+  if(data.records.length === 0){
+
+    history.innerHTML =
+      '<div class="empty">まだ記録がないにゃ🐾</div>';
+
+    return;
+
+  }
+
+
+  data.records
+    .slice(0,30)
+    .forEach(record => {
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "record";
+
+      const sign =
+        record.type === "expense"
+          ? "-"
+          : "+";
+
+      const color =
+        record.type === "expense"
+          ? "#d84d79"
+          : "#3a9464";
+
+      div.innerHTML = `
+
+        <div class="record-left">
+
+          <div class="record-main">
+            ${record.category}
+          </div>
+
+          ${
+            record.memo
+              ? `
+                <div class="record-memo">
+                  ${escapeHtml(record.memo)}
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+
+        <div class="record-right">
+
+          <div
+            class="record-amount"
+            style="color:${color};"
+          >
+            ${sign}¥${yen(record.amount)}
+          </div>
+
+          <button
+            class="delete"
+            onclick="deleteRecord(${record.id})"
+          >
+            削除
+          </button>
+
+        </div>
+
+      `;
+
+      history.appendChild(div);
+
+    });
+
+}
+
+
+function escapeHtml(text){
+
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function deleteRecord(id){
+
+  const index =
+    data.records.findIndex(
+      r => r.id === id
+    );
+
+  if(index === -1) return;
+
+  const record =
+    data.records[index];
+
+  if(record.type === "saving"){
+
+    data.cat.totalSaved =
+      Math.max(
+        0,
+        data.cat.totalSaved -
+        Number(record.amount)
+      );
+
+  }
+
+
+  data.records.splice(
+    index,
+    1
+  );
+
+  saveData();
+
+  updateSummary();
+  renderHistory();
+  renderCat();
+
+  showToast(
+    "記録を削除したにゃ"
+  );
+
+}
+
+
+/* =========================
+   ACCOUNTS
+========================= */
+
+const accountNames = {
+
+  salary:"💳 給料口座",
+
+  savings:"🏦 貯金口座",
+
+  cash:"📁 家の現金ファイル"
+
+};
+
+
+function renderAccounts(){
+
+  const container =
+    document.getElementById(
+      "accounts"
+    );
+
+  container.innerHTML = "";
+
+
+  Object.keys(accountNames)
+    .forEach(key => {
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "account";
+
+      div.innerHTML = `
+
+        <div class="account-name">
+          ${accountNames[key]}
+        </div>
+
+        <div class="account-balance">
+          ¥${yen(data.accounts[key])}
+        </div>
+
+        <div class="account-buttons">
+
+          <button
+            onclick="setAccount('${key}')"
+          >
+            金額を設定
+          </button>
+
+          <button
+            onclick="quickAddAccount('${key}')"
+          >
+            ＋追加
+          </button>
+
+        </div>
+
+      `;
+
+      container.appendChild(div);
+
+    });
+
+
+  const total =
+    Object.values(data.accounts)
+      .reduce(
+        (sum,value) =>
+          sum + Number(value || 0),
+        0
+      );
+
+  document.getElementById(
+    "totalAssets"
+  ).textContent =
+    yen(total);
+
+}
+
+
+function setAccount(key){
+
+  const current =
+    data.accounts[key];
+
+  const value =
+    prompt(
+      accountNames[key] +
+      "\n現在の金額：¥" +
+      yen(current) +
+      "\n\n新しい金額を入力してにゃ"
+    );
+
+  if(value === null) return;
+
+  const amount =
+    Number(value);
+
+  if(isNaN(amount) || amount < 0){
+
+    showToast(
+      "正しい金額を入れてにゃ！"
+    );
+
+    return;
+
+  }
+
+  data.accounts[key] =
+    amount;
+
+  saveData();
+
+  renderAccounts();
+
+  showToast(
+    "お金の場所を更新したにゃ！🏦"
+  );
+
+}
+
+
+function quickAddAccount(key){
+
+  const value =
+    prompt(
+      accountNames[key] +
+      "\nいくら追加する？"
+    );
+
+  if(value === null) return;
+
+  const amount =
+    Number(value);
+
+  if(!amount || amount <= 0){
+
+    showToast(
+      "金額を入力してにゃ！"
+    );
+
+    return;
+
+  }
+
+  data.accounts[key] +=
+    amount;
+
+  saveData();
+
+  renderAccounts();
+
+  showToast(
+    "追加したにゃ！💰"
+  );
+
+}
+
+
+/* =========================
+   TRANSFER
+========================= */
+
+function openTransferModal(){
+
+  document.getElementById(
+    "transferAmount"
+  ).value = "";
+
+  document.getElementById(
+    "transferModal"
+  ).style.display = "flex";
+
+}
+
+
+function closeTransferModal(){
+
+  document.getElementById(
+    "transferModal"
+  ).style.display = "none";
+
+}
+
+
+function saveTransfer(){
+
+  const from =
+    document.getElementById(
+      "fromAccount"
+    ).value;
+
+  const to =
+    document.getElementById(
+      "toAccount"
+    ).value;
+
+  const amount =
+    Number(
+      document.getElementById(
+        "transferAmount"
+      ).value
+    );
+
+
+  if(from === to){
+
+    showToast(
+      "同じ場所には移せないにゃ！"
+    );
+
+    return;
+
+  }
+
+
+  if(!amount || amount <= 0){
+
+    showToast(
+      "金額を入力してにゃ！"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    data.accounts[from] <
+    amount
+  ){
+
+    showToast(
+      "その場所のお金が足りないにゃ🥺"
+    );
+
+    return;
+
+  }
+
+
+  data.accounts[from] -=
+    amount;
+
+  data.accounts[to] +=
+    amount;
+
+
+  data.transfers.unshift({
+
+    id:Date.now(),
+
+    from:from,
+
+    to:to,
+
+    amount:amount,
+
+    date:new Date()
+      .toISOString()
+
+  });
+
+
+  saveData();
+
+  renderAccounts();
+
+  closeTransferModal();
+
+  showToast(
+    "お金を移動したにゃ！🔄"
+  );
+
+}
+
+
+/* =========================
+   GOALS
+========================= */
+
+function openGoalModal(){
+
+  document.getElementById(
+    "goalName"
+  ).value = "";
+
+  document.getElementById(
+    "goalTarget"
+  ).value = "";
+
+  document.getElementById(
+    "goalCurrent"
+  ).value = "0";
+
+  document.getElementById(
+    "goalModal"
+  ).style.display = "flex";
+
+}
+
+
+function closeGoalModal(){
+
+  document.getElementById(
+    "goalModal"
+  ).style.display = "none";
+
+}
+
+
+function saveGoal(){
+
+  const name =
+    document.getElementById(
+      "goalName"
+    ).value.trim();
+
+  const target =
+    Number(
+      document.getElementById(
+        "goalTarget"
+      ).value
+    );
+
+  const current =
+    Number(
+      document.getElementById(
+        "goalCurrent"
+      ).value
+    ) || 0;
+
+
+  if(!name){
+
+    showToast(
+      "目標の名前を入れてにゃ！"
+    );
+
+    return;
+
+  }
+
+
+  if(!target || target <= 0){
+
+    showToast(
+      "目標金額を入れてにゃ！"
+    );
+
+    return;
+
+  }
+
+
+  data.goals.push({
+
+    id:Date.now(),
+
+    name:name,
+
+    target:target,
+
+    current:Math.min(
+      current,
+      target
+    )
+
+  });
+
+
+  saveData();
+
+  renderGoals();
+
+  closeGoalModal();
+
+  showToast(
+    "目標を作ったにゃ！🎯"
+  );
+
+}
+
+
+let selectedGoalId = null;
+
+
+function openGoalAddModal(id){
+
+  const goal =
+    data.goals.find(
+      g => g.id === id
+    );
+
+  if(!goal) return;
+
+  selectedGoalId =
+    id;
+
+  document.getElementById(
+    "goalAddName"
+  ).textContent =
+    "🎯 " + goal.name;
+
+  document.getElementById(
+    "goalAddAmount"
+  ).value = "";
+
+  document.getElementById(
+    "goalAddModal"
+  ).style.display = "flex";
+
+}
+
+
+function closeGoalAddModal(){
+
+  document.getElementById(
+    "goalAddModal"
+  ).style.display = "none";
+
+}
+
+
+function saveGoalAdd(){
+
+  const goal =
+    data.goals.find(
+      g =>
+        g.id === selectedGoalId
+    );
+
+  if(!goal) return;
+
+  const amount =
+    Number(
+      document.getElementById(
+        "goalAddAmount"
+      ).value
+    );
+
+
+  if(!amount || amount <= 0){
+
+    showToast(
+      "金額を入力してにゃ！"
+    );
+
+    return;
+
+  }
+
+
+  const before =
+    goal.current;
+
+  goal.current =
+    Math.min(
+      goal.target,
+      goal.current + amount
+    );
+
+
+  const actualAdded =
+    goal.current - before;
+
+
+  data.cat.totalSaved +=
+    actualAdded;
+
+
+  addExp(
+    Math.max(
+      5,
+      Math.floor(actualAdded / 100)
+    )
+  );
+
+
+  saveData();
+
+  renderGoals();
+
+  closeGoalAddModal();
+
+  showToast(
+    goal.current >= goal.target
+      ? "目標達成にゃーー！！🎉🐈"
+      : "貯金したにゃ！えらい！💗"
+  );
+
+}
+
+
+function deleteGoal(id){
+
+  const index =
+    data.goals.findIndex(
+      g => g.id === id
+    );
+
+  if(index === -1) return;
+
+  data.goals.splice(
+    index,
+    1
+  );
+
+  saveData();
+
+  renderGoals();
+
+  showToast(
+    "目標を削除したにゃ"
+  );
+
+}
+
+
+function renderGoals(){
+
+  const container =
+    document.getElementById(
+      "goals"
+    );
+
+  container.innerHTML = "";
+
+
+  if(data.goals.length === 0){
+
+    container.innerHTML =
+      '<div class="empty">まだ目標がないにゃ🎯</div>';
+
+    return;
+
+  }
+
+
+  data.goals.forEach(goal => {
+
+    const percent =
+      Math.min(
+        100,
+        Math.round(
+          (goal.current /
+            goal.target) *
+          100
+        )
+      );
+
+
+    const div =
+      document.createElement("div");
+
+    div.className =
+      "goal";
+
+    div.innerHTML = `
+
+      <div class="goal-top">
+
+        <div class="goal-name">
+          ${escapeHtml(goal.name)}
+        </div>
+
+        <div class="goal-percent">
+          ${percent}%
+        </div>
+
+      </div>
+
+      <div class="goal-bar">
+
+        <div
+          class="goal-fill"
+          style="width:${percent}%"
+        ></div>
+
+      </div>
+
+      <div class="goal-info">
+        ¥${yen(goal.current)}
+        ／
+        ¥${yen(goal.target)}
+        ${
+          goal.current >= goal.target
+            ? "　🎉達成！"
+            : "　あと¥" +
+              yen(
+                goal.target -
+                goal.current
+              )
+        }
+      </div>
+
+      <div class="goal-buttons">
+
+        ${
+          goal.current >= goal.target
+            ? `
+              <button
+                onclick="showToast('達成おめでとうにゃーー！！🎉')"
+              >
+                🎉 達成済み
+              </button>
+            `
+            : `
+              <button
+                onclick="openGoalAddModal(${goal.id})"
+              >
+                ＋ 貯める
+              </button>
+            `
+        }
+
+        <button
+          onclick="deleteGoal(${goal.id})"
+        >
+          削除
+        </button>
+
+      </div>
+
+    `;
+
+    container.appendChild(div);
+
+  });
+
+}
+
+
+/* =========================
+   ROOM
+========================= */
+
+const furnitureInfo = {
+
+  bed:{
+    level:1,
+    id:"roomBed"
+  },
+
+  plant:{
+    level:2,
+    id:"roomPlant"
+  },
+
+  table:{
+    level:3,
+    id:"roomTable"
+  },
+
+  sofa:{
+    level:5,
+    id:"roomSofa"
+  },
+
+  tv:{
+    level:7,
+    id:"roomTv"
+  },
+
+  plush:{
+    level:10,
+    id:"roomPlush"
+  },
+
+  star:{
+    level:15,
+    id:"roomStar"
+  },
+
+  heart:{
+    level:20,
+    id:"roomHeart"
+  },
+
+  paw:{
+    level:30,
+    id:"roomPaw"
+  }
+
+};
+
+
+function toggleFurniture(key){
+
+  const info =
+    furnitureInfo[key];
+
+  if(!info) return;
+
+
+  if(
+    data.cat.level <
+    info.level
+  ){
+
+    showToast(
+      "Lv." +
+      info.level +
+      "で解放にゃ🔒"
+    );
+
+    return;
+
+  }
+
+
+  const index =
+    data.room.items.indexOf(key);
+
+
+  if(index === -1){
+
+    data.room.items.push(key);
+
+    showToast(
+      "お部屋に置いたにゃ！🏠"
+    );
+
+  }else{
+
+    data.room.items.splice(
+      index,
+      1
+    );
+
+    showToast(
+      "片づけたにゃ🐾"
+    );
+
+  }
+
+
+  saveData();
+
+  renderRoom();
+
+}
+
+
+function renderRoom(){
+
+  Object.keys(
+    furnitureInfo
+  ).forEach(key => {
+
+    const info =
+      furnitureInfo[key];
+
+    const el =
+      document.getElementById(
+        info.id
+      );
+
+    if(!el) return;
+
+
+    const unlocked =
+      data.cat.level >=
+      info.level;
+
+
+    const placed =
+      data.room.items
+        .includes(key);
+
+
+    el.style.display =
+      unlocked && placed
+        ? "block"
+        : "none";
+
+    el.style.opacity =
+      unlocked
+        ? "1"
+        : ".35";
+
+  });
+
+
+  const unlockedItems =
+    Object.keys(
+      furnitureInfo
+    )
+    .filter(
+      key =>
+        data.cat.level >=
+        furnitureInfo[key].level
+    );
+
+
+  const placedCount =
+    data.room.items.filter(
+      key =>
+        unlockedItems.includes(key)
+    ).length;
+
+
+  const percent =
+    unlockedItems.length === 0
+      ? 0
+      : Math.round(
+          (placedCount /
+            unlockedItems.length) *
+          100
+        );
+
+
+  document.getElementById(
+    "roomPercent"
+  ).textContent =
+    percent;
+
+
+  document.getElementById(
+    "roomLevel"
+  ).textContent =
+    data.cat.level;
+
+
+  updateDisplayedCat();
+
+}
+
+
+/* =========================
+   CAT COLLECTION
+========================= */
+
+function createCatCollection(){
+
+  const old =
+    document.getElementById(
+      "catCollectionArea"
+    );
+
+  if(old){
+    old.remove();
+  }
+
+
+  const card =
+    document.createElement("div");
+
+  card.className =
+    "card";
+
+  card.id =
+    "catCollectionArea";
+
+
+  card.innerHTML = `
+
+    <div class="section-title">
+      🐈 にゃんこコレクション
+    </div>
+
+    <div
+      style="
+        font-size:10px;
+        color:#716c9a;
+        margin-bottom:12px;
+      "
+    >
+      レベルアップして新しい猫を解放しよう！
+    </div>
+
+    <div
+      id="catCollectionGrid"
+      style="
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:9px;
+      "
+    ></div>
+
+  `;
+
+
+  const roomCard =
+    document.querySelector(
+      ".room-card"
+    );
+
+
+  roomCard.after(card);
+
+  renderCatCollection();
+
+}
+
+
+
+
+
+function updateDisplayedCat(){
+
+  const icon =
+    getSelectedCat();
+
+
+  const cat =
+    document.getElementById(
+      "cat"
+    );
+
+
+  const roomCat =
+    document.getElementById(
+      "roomCat"
+    );
+
+
+  if(cat){
+
+    cat.textContent =
+      icon;
+
+  }
+
+
+  if(roomCat){
+
+    roomCat.textContent =
+      icon;
+
+  }
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+saveData();
+
+updateSummary();
+
+renderHistory();
+
+renderAccounts();
+
+renderGoals();
+
+renderCat();
+
+renderRoom();
+
+createCatCollection();
+
+updateDisplayedCat();
+/* =========================
+   STEP7 📊 CATEGORY SUMMARY
+========================= */
+
+const categoryIcons = {
+  "🎀 遊び":"🎀",
+  "💇🏻‍♀️ 美容":"💇🏻‍♀️",
+  "🐰 ちいかわ":"🐰",
+  "🎰 ガチャ":"🎰",
+  "🍚 食費":"🍚",
+  "🛍️ 買い物":"🛍️",
+  "✈️ 旅行":"✈️",
+  "💼 給料":"💼",
+  "その他":"📦"
+};
+
+
+function createCategorySummary(){
+
+  const old =
+    document.getElementById(
+      "categorySummaryArea"
+    );
+
+  if(old){
+    old.remove();
+  }
+
+
+  const card =
+    document.createElement("div");
+
+  card.className = "card";
+
+  card.id =
+    "categorySummaryArea";
+
+
+  card.innerHTML = `
+
+    <div class="section-title">
+      📊 カテゴリ別の支出
+    </div>
+
+    <div
+      style="
+        font-size:10px;
+        color:#716c9a;
+        margin-bottom:12px;
+      "
+    >
+      今月なににお金を使ったか見てみるにゃ！
+    </div>
+
+    <div
+      id="categorySummaryList"
+    ></div>
+
+  `;
+
+
+  const historyCard =
+    document.getElementById(
+      "history"
+    ).closest(".card");
+
+
+  historyCard.after(card);
+
+
+  renderCategorySummary();
+
+}
+
+
+function renderCategorySummary(){
+
+  const container =
+    document.getElementById(
+      "categorySummaryList"
+    );
+
+  if(!container) return;
+
+
+  container.innerHTML = "";
+
+
+  const categories = {};
+
+
+  data.records
+    .filter(
+      record =>
+        record.type === "expense"
+    )
+    .forEach(record => {
+
+      if(!categories[record.category]){
+        categories[record.category] = 0;
+      }
+
+      categories[record.category] +=
+        Number(record.amount);
+
+    });
+
+
+  const total =
+    Object.values(categories)
+      .reduce(
+        (sum,amount) =>
+          sum + amount,
+        0
+      );
+
+
+  if(total === 0){
+
+    container.innerHTML = `
+      <div class="empty">
+        まだ支出がないにゃ🐾
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  const sorted =
+    Object.entries(categories)
+      .sort(
+        (a,b) =>
+          b[1] - a[1]
+      );
+
+
+  sorted.forEach(
+    ([category,amount]) => {
+
+      const percent =
+        Math.round(
+          (amount / total) * 100
+        );
+
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+
+      row.style.cssText = `
+
+        border:2px solid #252344;
+
+        padding:10px;
+
+        margin-bottom:8px;
+
+        background:#faf9ff;
+
+      `;
+
+
+      row.innerHTML = `
+
+        <div
+          style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            font-size:10px;
+          "
+        >
+
+          <div>
+            ${categoryIcons[category] || "📦"}
+            ${escapeHtml(category)}
+          </div>
+
+          <div>
+            ¥${yen(amount)}
+          </div>
+
+        </div>
+
+
+        <div
+          style="
+            height:10px;
+            background:#e3e0ed;
+            border:2px solid #252344;
+            margin-top:7px;
+          "
+        >
+
+          <div
+            style="
+              height:100%;
+              width:${percent}%;
+              background:#ffafd0;
+            "
+          ></div>
+
+        </div>
+
+
+        <div
+          style="
+            display:flex;
+            justify-content:space-between;
+            font-size:8px;
+            color:#77729b;
+            margin-top:4px;
+          "
+        >
+
+          <span>
+            支出の${percent}%
+          </span>
+
+          <span>
+            ¥${yen(amount)}
+          </span>
+
+        </div>
+
+      `;
+
+
+      container.appendChild(row);
+
+    }
+  );
+
+
+  const totalBox =
+    document.createElement(
+      "div"
+    );
+
+
+  totalBox.style.cssText = `
+
+    margin-top:10px;
+
+    padding:12px;
+
+    border:3px dotted #252344;
+
+    background:#fff8df;
+
+    text-align:center;
+
+  `;
+
+
+  totalBox.innerHTML = `
+
+    <div
+      style="
+        font-size:9px;
+        color:#77729b;
+      "
+    >
+      💸 今月の支出合計
+    </div>
+
+    <div
+      style="
+        font-size:20px;
+        margin-top:4px;
+      "
+    >
+      ¥${yen(total)}
+    </div>
+
+  `;
+
+
+  container.appendChild(
+    totalBox
+  );
+
+}
+
+
+/* 記録後にカテゴリ集計も更新 */
+
+const originalSaveRecord =
+  saveRecord;
+
+saveRecord = function(){
+
+  originalSaveRecord();
+
+  renderCategorySummary();
+
+};
+
+
+/* 記録削除後にも更新 */
+
+const originalDeleteRecord =
+  deleteRecord;
+
+deleteRecord = function(id){
+
+  originalDeleteRecord(id);
+
+  renderCategorySummary();
+
+};
+
+
+/* 初回表示 */
+
+createCategorySummary();
+/* =========================
+   STEP8 💡 MONTHLY BUDGET
+========================= */
+
+if(!data.budgets){
+
+  data.budgets = {
+
+    "🎀 遊び":0,
+    "🐰 ちいかわ":0,
+    "🎰 ガチャ":0,
+    "💇🏻‍♀️ 美容":0,
+    "🍚 食費":0,
+    "🛍️ 買い物":0,
+    "✈️ 旅行":0
+
+  };
+
+}
+
+
+const budgetCategories = [
+
+  "🎀 遊び",
+  "🐰 ちいかわ",
+  "🎰 ガチャ",
+  "💇🏻‍♀️ 美容",
+  "🍚 食費",
+  "🛍️ 買い物",
+  "✈️ 旅行"
+
+];
+
+
+function createBudgetArea(){
+
+  const old =
+    document.getElementById(
+      "budgetArea"
+    );
+
+  if(old){
+    old.remove();
+  }
+
+
+  const card =
+    document.createElement(
+      "div"
+    );
+
+  card.className =
+    "card";
+
+  card.id =
+    "budgetArea";
+
+
+  card.innerHTML = `
+
+    <div class="section-title">
+      💡 今月あと使えるお金
+    </div>
+
+    <div
+      style="
+        text-align:center;
+        padding:18px 10px;
+        background:#fff8df;
+        border:3px dotted #252344;
+      "
+    >
+
+      <div
+        style="
+          font-size:9px;
+          color:#77729b;
+        "
+      >
+        自由に使える残り
+      </div>
+
+      <div
+        id="budgetFree"
+        style="
+          font-size:30px;
+          margin:5px 0;
+        "
+      >
+        ¥0
+      </div>
+
+      <div
+        id="budgetMessage"
+        style="
+          font-size:9px;
+          color:#77729b;
+        "
+      >
+        にゃんこが計算中…
+      </div>
+
+    </div>
+
+
+    <div
+      style="
+        margin-top:14px;
+        font-size:10px;
+      "
+    >
+      🎯 今月のカテゴリ予算
+    </div>
+
+
+    <div
+      id="budgetList"
+      style="
+        margin-top:8px;
+      "
+    ></div>
+
+
+    <button
+      style="
+        width:100%;
+        margin-top:8px;
+      "
+      onclick="openBudgetModal()"
+    >
+      ⚙️ 予算を設定する
+    </button>
+
+  `;
+
+
+  const summaryCard =
+    document
+      .querySelector(".stats")
+      .closest(".card");
+
+
+  summaryCard.after(card);
+
+
+  renderBudget();
+
+}
+
+
+/* =========================
+   FREE BUDGET
+========================= */
+
+function calculateBudgetFree(){
+
+  return calculateFree();
+
+}
+
+
+/* =========================
+   BUDGET MESSAGE
+========================= */
+
+function getBudgetMessage(){
+
+  const free =
+    calculateBudgetFree();
+
+
+  if(free < 0){
+
+    return "使いすぎ注意にゃ…🥺";
+
+  }
+
+
+  if(free === 0){
+
+    return "今月の自由なお金はゼロにゃ！🐾";
+
+  }
+
+
+  if(free < 3000){
+
+    return "あとちょっと慎重にゃ！";
+
+  }
+
+
+  if(free < 10000){
+
+    return "まだ少し使えるにゃ🐈";
+
+  }
+
+
+  return "まだ余裕あるにゃ〜！😽";
+
+}
+
+
+/* =========================
+   RENDER BUDGET
+========================= */
+
+function renderBudget(){
+
+  const free =
+    calculateBudgetFree();
+
+
+  const freeElement =
+    document.getElementById(
+      "budgetFree"
+    );
+
+
+  const messageElement =
+    document.getElementById(
+      "budgetMessage"
+    );
+
+
+  if(freeElement){
+
+    freeElement.textContent =
+      "¥" + yen(free);
+
+    freeElement.style.color =
+      free < 0
+        ? "#d84d79"
+        : "#252344";
+
+  }
+
+
+  if(messageElement){
+
+    messageElement.textContent =
+      getBudgetMessage();
+
+  }
+
+
+  const list =
+    document.getElementById(
+      "budgetList"
+    );
+
+
+  if(!list) return;
+
+
+  list.innerHTML = "";
+
+
+  budgetCategories.forEach(
+    category => {
+
+      const budget =
+        Number(
+          data.budgets[category]
+        ) || 0;
+
+
+      const spent =
+        data.records
+          .filter(
+            record =>
+              record.type ===
+                "expense" &&
+              record.category ===
+                category
+          )
+          .reduce(
+            (sum,record) =>
+              sum +
+              Number(record.amount),
+            0
+          );
+
+
+      if(budget <= 0){
+
+        return;
+
+      }
+
+
+      const remaining =
+        budget - spent;
+
+
+      const percent =
+        Math.min(
+          100,
+          Math.round(
+            (spent / budget) * 100
+          )
+        );
+
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.style.cssText = `
+
+        border:2px solid #252344;
+
+        padding:10px;
+
+        margin-bottom:8px;
+
+        background:#faf9ff;
+
+      `;
+
+
+      div.innerHTML = `
+
+        <div
+          style="
+            display:flex;
+            justify-content:space-between;
+            font-size:10px;
+          "
+        >
+
+          <span>
+            ${category}
+          </span>
+
+          <span
+            style="
+              color:
+                ${
+                  remaining < 0
+                    ? "#d84d79"
+                    : "#252344"
+                };
+            "
+          >
+            ${
+              remaining < 0
+                ? "オーバー "
+                : "あと "
+            }
+            ¥${yen(
+              Math.abs(remaining)
+            )}
+          </span>
+
+        </div>
+
+
+        <div
+          style="
+            height:10px;
+            background:#e3e0ed;
+            border:2px solid #252344;
+            margin-top:7px;
+          "
+        >
+
+          <div
+            style="
+              height:100%;
+              width:${percent}%;
+              background:
+                ${
+                  remaining < 0
+                    ? "#e99ab5"
+                    : "#ffafd0"
+                };
+            "
+          ></div>
+
+        </div>
+
+
+        <div
+          style="
+            display:flex;
+            justify-content:space-between;
+            font-size:8px;
+            color:#77729b;
+            margin-top:4px;
+          "
+        >
+
+          <span>
+            ¥${yen(spent)}
+            ／
+            ¥${yen(budget)}
+          </span>
+
+          <span>
+            ${percent}%
+          </span>
+
+        </div>
+
+      `;
+
+
+      list.appendChild(div);
+
+    }
+  );
+
+
+  const noBudget =
+    budgetCategories.every(
+      category =>
+        !data.budgets[category]
+    );
+
+
+  if(noBudget){
+
+    list.innerHTML = `
+
+      <div class="empty">
+
+        まだ予算が設定されてないにゃ🐾
+
+        <br>
+
+        「予算を設定する」から作ってみてにゃ！
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================
+   BUDGET MODAL
+========================= */
+
+function openBudgetModal(){
+
+  const existing =
+    document.getElementById(
+      "budgetModal"
+    );
+
+
+  if(existing){
+
+    existing.remove();
+
+  }
+
+
+  const bg =
+    document.createElement(
+      "div"
+    );
+
+  bg.id =
+    "budgetModal";
+
+  bg.className =
+    "modal-bg";
+
+
+  bg.innerHTML = `
+
+    <div class="modal">
+
+      <div class="modal-title">
+        ⚙️ 今月の予算
+      </div>
+
+      <div
+        style="
+          font-size:9px;
+          color:#77729b;
+          margin-bottom:10px;
+        "
+      >
+        「今月ここまで使う！」を決めるにゃ。
+      </div>
+
+      ${budgetCategories.map(
+        category => `
+
+          <label>
+            ${category}
+          </label>
+
+          <input
+            type="number"
+            id="budget_${categoryIcons[category] || "x"}"
+            data-budget-category="${category}"
+            value="${
+              data.budgets[category] || ""
+            }"
+            placeholder="例：10000"
+          >
+
+        `
+      ).join("")}
+
+
+      <div class="modal-buttons">
+
+        <button
+          class="cancel"
+          onclick="
+            document
+              .getElementById('budgetModal')
+              .remove()
+          "
+        >
+          キャンセル
+        </button>
+
+        <button
+          onclick="saveBudgets()"
+        >
+          保存する
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(bg);
+
+  bg.style.display =
+    "flex";
+
+}
+
+
+function saveBudgets(){
+
+  const inputs =
+    document.querySelectorAll(
+      "[data-budget-category]"
+    );
+
+
+  inputs.forEach(input => {
+
+    const category =
+      input.dataset
+        .budgetCategory;
+
+
+    const amount =
+      Number(input.value)
+      || 0;
+
+
+    data.budgets[category] =
+      amount;
+
+  });
+
+
+  saveData();
+
+  renderBudget();
+
+
+  const modal =
+    document.getElementById(
+      "budgetModal"
+    );
+
+
+  if(modal){
+
+    modal.remove();
+
+  }
+
+
+  showToast(
+    "今月の予算を設定したにゃ！💰"
+  );
+
+}
+
+
+/* =========================
+   UPDATE AFTER RECORD
+========================= */
+
+const oldSaveRecordStep8 =
+  saveRecord;
+
+
+saveRecord = function(){
+
+  oldSaveRecordStep8();
+
+  renderBudget();
+
+};
+
+
+const oldDeleteRecordStep8 =
+  deleteRecord;
+
+
+deleteRecord = function(id){
+
+  oldDeleteRecordStep8(id);
+
+  renderBudget();
+
+};
+
+
+/* =========================
+   START STEP8
+========================= */
+
+createBudgetArea();
+/* =========================
+   STEP9 📅 MONTH SELECTOR
+========================= */
+
+if(!data.selectedMonth){
+  const now = new Date();
+  data.selectedMonth =
+    now.getFullYear() + "-" +
+    String(now.getMonth() + 1).padStart(2, "0");
+  saveData();
+}
+
+/* 月を表示するための関数 */
+function formatMonthJP(month){
+  const [year, monthNum] = month.split("-");
+  return `${year}年${Number(monthNum)}月`;
+}
+
+/* 前月 */
+function changeMonth(offset){
+  const [year, month] = data.selectedMonth.split("-").map(Number);
+
+  const date = new Date(year, month - 1 + offset, 1);
+
+  data.selectedMonth =
+    date.getFullYear() + "-" +
+    String(date.getMonth() + 1).padStart(2, "0");
+
+  saveData();
+
+  renderMonthSelector();
+  renderCategorySummary();
+  renderBudget();
+  renderHistory();
+  updateSummary();
+}
+
+/* 月選択UI */
+function createMonthSelector(){
+  if(document.getElementById("month-selector-card")) return;
+
+  const card = document.createElement("div");
+  card.className = "card";
+  card.id = "month-selector-card";
+
+  card.innerHTML = `
+    <h2>📅 月を選ぶ</h2>
+
+    <div style="
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:15px;
+    ">
+
+      <button
+        onclick="changeMonth(-1)"
+        style="
+          font-size:22px;
+          min-width:55px;
+        "
+      >◀️</button>
+
+      <div
+        id="selected-month-display"
+        style="
+          font-size:20px;
+          font-weight:bold;
+          text-align:center;
+          flex:1;
+        "
+      ></div>
+
+      <button
+        onclick="changeMonth(1)"
+        style="
+          font-size:22px;
+          min-width:55px;
+        "
+      >▶️</button>
+
+    </div>
+
+    <button
+      onclick="goToCurrentMonth()"
+      style="
+        width:100%;
+        margin-top:12px;
+      "
+    >
+      📍 今月に戻る
+    </button>
+  `;
+
+  const firstCard = document.querySelector(".card");
+
+  if(firstCard){
+    firstCard.parentNode.insertBefore(card, firstCard);
+  }
+}
+
+/* 今月へ戻る */
+function goToCurrentMonth(){
+  const now = new Date();
+
+  data.selectedMonth =
+    now.getFullYear() + "-" +
+    String(now.getMonth() + 1).padStart(2, "0");
+
+  saveData();
+
+  renderMonthSelector();
+  renderCategorySummary();
+  renderBudget();
+  renderHistory();
+  updateSummary();
+}
+
+/* 月表示更新 */
+function renderMonthSelector(){
+  const display =
+    document.getElementById("selected-month-display");
+
+  if(display){
+    display.textContent =
+      formatMonthJP(data.selectedMonth);
+  }
+}
+
+createMonthSelector();
+renderMonthSelector();
+/* =========================
+   STEP9-② 📅 SELECTED MONTH ANALYSIS
+========================= */
+
+function getSelectedMonthRecords(){
+  return data.records.filter(record => {
+    if(!record.date) return false;
+
+    return record.date.slice(0,7) === data.selectedMonth;
+  });
+}
+
+function getSelectedMonthExpenses(){
+  return getSelectedMonthRecords().filter(record => {
+    return record.type === "expense";
+  });
+}
+
+function getSelectedMonthIncome(){
+  return getSelectedMonthRecords().filter(record => {
+    return record.type === "income";
+  });
+}
+
+function getSelectedMonthTotalExpense(){
+  return getSelectedMonthExpenses().reduce((sum, record) => {
+    return sum + Number(record.amount || 0);
+  }, 0);
+}
+
+function getSelectedMonthTotalIncome(){
+  return getSelectedMonthIncome().reduce((sum, record) => {
+    return sum + Number(record.amount || 0);
+  }, 0);
+}
+
+function createSelectedMonthAnalysis(){
+
+  if(document.getElementById("selected-month-analysis")){
+    return;
+  }
+
+  const card = document.createElement("div");
+
+  card.className = "card";
+  card.id = "selected-month-analysis";
+
+  card.innerHTML = `
+    <h2>📊 選択した月のまとめ</h2>
+
+    <div
+      id="selected-month-analysis-content"
+      style="margin-top:15px;"
+    ></div>
+  `;
+
+  const monthCard =
+    document.getElementById("month-selector-card");
+
+  if(monthCard){
+    monthCard.parentNode.insertBefore(
+      card,
+      monthCard.nextSibling
+    );
+  }
+}
+
+function renderSelectedMonthAnalysis(){
+
+  const area =
+    document.getElementById(
+      "selected-month-analysis-content"
+    );
+
+  if(!area) return;
+
+  const records =
+    getSelectedMonthRecords();
+
+  const expenses =
+    getSelectedMonthExpenses();
+
+  const income =
+    getSelectedMonthIncome();
+
+  const totalExpense =
+    getSelectedMonthTotalExpense();
+
+  const totalIncome =
+    getSelectedMonthTotalIncome();
+
+  const categoryTotals = {};
+
+  expenses.forEach(record => {
+
+    const category =
+      record.category || "その他";
+
+    if(!categoryTotals[category]){
+      categoryTotals[category] = 0;
+    }
+
+    categoryTotals[category] +=
+      Number(record.amount || 0);
+  });
+
+  const sortedCategories =
+    Object.entries(categoryTotals)
+      .sort((a,b) => b[1] - a[1]);
+
+  let html = `
+
+    <div style="
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    ">
+
+      <div style="
+        padding:12px;
+        border:2px dashed #aaa;
+        border-radius:12px;
+        text-align:center;
+      ">
+        <div>💰 収入</div>
+        <strong style="font-size:18px;">
+          ¥${totalIncome.toLocaleString()}
+        </strong>
+      </div>
+
+      <div style="
+        padding:12px;
+        border:2px dashed #aaa;
+        border-radius:12px;
+        text-align:center;
+      ">
+        <div>💸 支出</div>
+        <strong style="font-size:18px;">
+          ¥${totalExpense.toLocaleString()}
+        </strong>
+      </div>
+
+    </div>
+
+    <div style="
+      margin-top:15px;
+      padding:12px;
+      border-radius:12px;
+      text-align:center;
+      background:rgba(255,255,255,.5);
+    ">
+      📝 記録件数
+      <strong>${records.length}件</strong>
+    </div>
+
+    <h3 style="margin-top:20px;">
+      🐾 カテゴリ別
+    </h3>
+  `;
+
+  if(sortedCategories.length === 0){
+
+    html += `
+      <div style="
+        text-align:center;
+        padding:20px;
+        opacity:.7;
+      ">
+        この月の支出はまだないにゃ🐈
+      </div>
+    `;
+
+  }else{
+
+    sortedCategories.forEach(([category, amount]) => {
+
+      const percent =
+        totalExpense > 0
+          ? Math.round((amount / totalExpense) * 100)
+          : 0;
+
+      const icon =
+        categoryIcons[category] || "📦";
+
+      html += `
+        <div style="margin-top:14px;">
+
+          <div style="
+            display:flex;
+            justify-content:space-between;
+            gap:10px;
+          ">
+            <span>
+              ${icon} ${category}
+            </span>
+
+            <strong>
+              ¥${amount.toLocaleString()}
+            </strong>
+          </div>
+
+          <div style="
+            height:10px;
+            background:#eee;
+            border-radius:999px;
+            overflow:hidden;
+            margin-top:5px;
+          ">
+
+            <div style="
+              width:${percent}%;
+              height:100%;
+              background:#9b8acb;
+              border-radius:999px;
+            "></div>
+
+          </div>
+
+          <div style="
+            text-align:right;
+            font-size:12px;
+            opacity:.7;
+            margin-top:2px;
+          ">
+            ${percent}%
+          </div>
+
+        </div>
+      `;
+    });
+  }
+
+  area.innerHTML = html;
+}
+
+/* 月を変更したときにも更新 */
+const oldChangeMonthStep9 = changeMonth;
+
+changeMonth = function(offset){
+
+  oldChangeMonthStep9(offset);
+
+  renderSelectedMonthAnalysis();
+};
+
+
+/* 今月に戻したときにも更新 */
+const oldGoToCurrentMonthStep9 =
+  goToCurrentMonth;
+
+goToCurrentMonth = function(){
+
+  oldGoToCurrentMonthStep9();
+
+  renderSelectedMonthAnalysis();
+};
+
+
+/* 初期表示 */
+createSelectedMonthAnalysis();
+renderSelectedMonthAnalysis();
+/* =========================
+   STEP9-③ 📅 MONTHLY HISTORY
+========================= */
+
+function getMonthKeyFromDate(dateString){
+  if(!dateString) return "";
+  return dateString.slice(0,7);
+}
+
+function getSelectedMonthHistory(){
+  return data.records.filter(record => {
+    return getMonthKeyFromDate(record.date) === data.selectedMonth;
+  });
+}
+
+function renderMonthlyHistory(){
+
+  const area =
+    document.getElementById("monthly-history-area");
+
+  if(!area) return;
+
+  const records =
+    getSelectedMonthHistory()
+      .slice()
+      .sort((a,b) => {
+        return new Date(b.date) - new Date(a.date);
+      });
+
+  if(records.length === 0){
+
+    area.innerHTML = `
+      <div style="
+        text-align:center;
+        padding:20px;
+        opacity:.7;
+      ">
+        この月の記録はまだないにゃ🐈
+      </div>
+    `;
+
+    return;
+  }
+
+  let html = "";
+
+  records.forEach(record => {
+
+    const isIncome =
+      record.type === "income";
+
+    const sign =
+      isIncome ? "+" : "-";
+
+    const icon =
+      categoryIcons[record.category]
+      || (isIncome ? "💰" : "📦");
+
+    const amount =
+      Number(record.amount || 0);
+
+    const date =
+      record.date
+        ? new Date(record.date).toLocaleDateString(
+            "ja-JP",
+            {
+              month:"numeric",
+              day:"numeric"
+            }
+          )
+        : "";
+
+    html += `
+      <div style="
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        padding:12px 4px;
+        border-bottom:1px dashed #aaa;
+      ">
+
+        <div style="flex:1;">
+
+          <div style="
+            font-weight:bold;
+          ">
+            ${icon}
+            ${record.category || "その他"}
+          </div>
+
+          <div style="
+            font-size:12px;
+            opacity:.65;
+            margin-top:3px;
+          ">
+            ${date}
+            ${record.memo ? " ・ " + record.memo : ""}
+          </div>
+
+        </div>
+
+        <div style="
+          font-weight:bold;
+          white-space:nowrap;
+          font-size:16px;
+        ">
+          ${sign}¥${amount.toLocaleString()}
+        </div>
+
+      </div>
+    `;
+  });
+
+  area.innerHTML = html;
+}
+
+
+function createMonthlyHistory(){
+
+  if(document.getElementById("monthly-history-card")){
+    return;
+  }
+
+  const card = document.createElement("div");
+
+  card.className = "card";
+  card.id = "monthly-history-card";
+
+  card.innerHTML = `
+    <h2>📖 月別の記録</h2>
+
+    <div
+      id="monthly-history-area"
+      style="margin-top:10px;"
+    ></div>
+  `;
+
+  const analysis =
+    document.getElementById(
+      "selected-month-analysis"
+    );
+
+  if(analysis){
+
+    analysis.parentNode.insertBefore(
+      card,
+      analysis.nextSibling
+    );
+
+  }else{
+
+    const monthCard =
+      document.getElementById(
+        "month-selector-card"
+      );
+
+    if(monthCard){
+
+      monthCard.parentNode.insertBefore(
+        card,
+        monthCard.nextSibling
+      );
+
+    }
+  }
+}
+
+
+/* 月変更時に履歴も更新 */
+
+const oldChangeMonthStep9History =
+  changeMonth;
+
+changeMonth = function(offset){
+
+  oldChangeMonthStep9History(offset);
+
+  renderSelectedMonthAnalysis();
+  renderMonthlyHistory();
+};
+
+
+/* 今月へ戻したとき */
+
+const oldGoToCurrentMonthStep9History =
+  goToCurrentMonth;
+
+goToCurrentMonth = function(){
+
+  oldGoToCurrentMonthStep9History();
+
+  renderSelectedMonthAnalysis();
+  renderMonthlyHistory();
+};
+
+
+/* 初期表示 */
+
+createMonthlyHistory();
+renderMonthlyHistory();
+/* =========================
+   STEP9-④ 💡 MONTHLY FREE MONEY FIX
+========================= */
+
+function calculateSelectedMonthFree(){
+
+  const records =
+    getSelectedMonthRecords();
+
+  let income = 0;
+  let expense = 0;
+
+  records.forEach(record => {
+
+    const amount =
+      Number(record.amount || 0);
+
+    if(record.type === "income"){
+      income += amount;
+    }
+
+    if(record.type === "expense"){
+      expense += amount;
+    }
+
+  });
+
+  return income - expense;
+}
+
+
+/* STEP8の「あと使えるお金」を
+   選択中の月に連動させる */
+
+function renderBudget(){
+
+  const area =
+    document.getElementById("budget-area");
+
+  if(!area) return;
+
+  const free =
+    calculateSelectedMonthFree();
+
+  let message = "";
+
+  if(free < 0){
+
+    message =
+      "使いすぎ注意にゃ…🥺";
+
+  }else if(free === 0){
+
+    message =
+      "この月の自由なお金はゼロにゃ！🐾";
+
+  }else if(free < 3000){
+
+    message =
+      "あとちょっと慎重にゃ！🐾";
+
+  }else if(free < 10000){
+
+    message =
+      "まだ少し使えるにゃ🐈";
+
+  }else{
+
+    message =
+      "まだ余裕あるにゃ〜！😽";
+
+  }
+
+
+  let html = `
+
+    <div style="
+      padding:15px;
+      border:2px dashed #aaa;
+      border-radius:14px;
+      text-align:center;
+      margin-bottom:18px;
+    ">
+
+      <div style="
+        font-size:14px;
+        opacity:.75;
+      ">
+        💡 ${formatMonthJP(data.selectedMonth)}
+        あと使えるお金
+      </div>
+
+      <div style="
+        font-size:28px;
+        font-weight:bold;
+        margin-top:5px;
+      ">
+        ¥${free.toLocaleString()}
+      </div>
+
+      <div style="
+        margin-top:5px;
+        font-size:13px;
+      ">
+        ${message}
+      </div>
+
+    </div>
+
+  `;
+
+
+  budgetCategories.forEach(category => {
+
+    const budget =
+      Number(data.budgets[category] || 0);
+
+    if(budget <= 0) return;
+
+    const expenses =
+      getSelectedMonthExpenses()
+        .filter(record =>
+          (record.category || "その他")
+          === category
+        );
+
+    const spent =
+      expenses.reduce(
+        (sum, record) =>
+          sum + Number(record.amount || 0),
+        0
+      );
+
+    const remaining =
+      budget - spent;
+
+    const percent =
+      budget > 0
+        ? Math.min(
+            100,
+            Math.round((spent / budget) * 100)
+          )
+        : 0;
+
+    const icon =
+      categoryIcons[category] || "📦";
+
+    html += `
+
+      <div style="
+        margin-top:15px;
+        padding-bottom:12px;
+        border-bottom:1px dashed #aaa;
+      ">
+
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          gap:10px;
+        ">
+
+          <strong>
+            ${icon} ${category}
+          </strong>
+
+          <span>
+            ¥${spent.toLocaleString()}
+            / ¥${budget.toLocaleString()}
+          </span>
+
+        </div>
+
+        <div style="
+          height:10px;
+          background:#eee;
+          border-radius:999px;
+          overflow:hidden;
+          margin-top:7px;
+        ">
+
+          <div style="
+            width:${percent}%;
+            height:100%;
+            background:#9b8acb;
+            border-radius:999px;
+          "></div>
+
+        </div>
+
+        <div style="
+          margin-top:5px;
+          font-size:13px;
+          text-align:right;
+        ">
+          ${
+            remaining >= 0
+            ? `あと ¥${remaining.toLocaleString()}`
+            : `¥${Math.abs(remaining).toLocaleString()} オーバー🥺`
+          }
+        </div>
+
+      </div>
+
+    `;
+  });
+
+
+  area.innerHTML = html;
+}
+
+
+/* 月変更時に予算も更新 */
+
+const oldChangeMonthStep9Budget =
+  changeMonth;
+
+changeMonth = function(offset){
+
+  oldChangeMonthStep9Budget(offset);
+
+  renderBudget();
+};
+
+
+/* 今月に戻したときも更新 */
+
+const oldGoToCurrentMonthStep9Budget =
+  goToCurrentMonth;
+
+goToCurrentMonth = function(){
+
+  oldGoToCurrentMonthStep9Budget();
+
+  renderBudget();
+};
+
+
+/* 初期表示 */
+
+renderBudget();
+
+
+/* =========================
+   STEP10 🐈 MISSION
+========================= */
+
+if(!data.missions){
+  data.missions = {};
+}
+
+/* =========================
+   STEP11 🏆 ACHIEVEMENTS
+========================= */
+
+if(!data.achievements){
+  data.achievements = {};
+}
+
+function getMissionKey(){
+
+  return data.selectedMonth;
+
+}
+
+
+function getMonthMission(){
+
+  const key =
+    getMissionKey();
+
+  if(!data.missions[key]){
+
+    data.missions[key] = {
+
+      record:false,
+      save:false,
+      three:false,
+      points:0
+
+    };
+
+    saveData();
+
+  }
+
+  return data.missions[key];
+
+}
+
+
+function checkMissionProgress(){
+
+  const mission =
+    getMonthMission();
+
+  const records =
+    getSelectedMonthRecords();
+
+
+  /* ① 支出を1件記録 */
+
+  mission.record =
+    records.some(
+      record =>
+        record.type === "expense"
+    );
+
+
+  /* ② 貯金口座へお金を移したか */
+
+  mission.save =
+    Array.isArray(data.transfers) &&
+    data.transfers.some(
+      transfer => {
+
+        if(!transfer.date){
+          return false;
+        }
+
+        if(transfer.to !== "savings"){
+          return false;
+        }
+
+        return (
+          transfer.date.slice(0,7)
+          === data.selectedMonth
+        );
+
+      }
+    );
+
+
+  /* ③ 3件以上記録 */
+
+  mission.three =
+    records.length >= 3;
+
+
+  saveData();
+
+}
+
+
+function getMissionCount(){
+
+  const mission =
+    getMonthMission();
+
+  let count = 0;
+
+  if(mission.record){
+    count++;
+  }
+
+  if(mission.save){
+    count++;
+  }
+
+  if(mission.three){
+    count++;
+  }
+
+  return count;
+
+}
+
+
+function createMissionArea(){
+
+  if(
+    document.getElementById(
+      "mission-card"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  const card =
+    document.createElement(
+      "div"
+    );
+
+
+  card.className =
+    "card";
+
+
+  card.id =
+    "mission-card";
+
+
+  card.innerHTML = `
+
+    <h2>🎯 にゃんこミッション</h2>
+
+    <div
+      id="mission-area"
+      style="margin-top:15px;"
+    ></div>
+
+  `;
+
+
+  const budget =
+    document.getElementById(
+      "budgetArea"
+    );
+
+
+  const analysis =
+    document.getElementById(
+      "selected-month-analysis"
+    );
+
+
+  if(budget){
+
+    budget.parentNode.insertBefore(
+      card,
+      budget.nextSibling
+    );
+
+  }else if(analysis){
+
+    analysis.parentNode.insertBefore(
+      card,
+      analysis.nextSibling
+    );
+
+  }
+
+}
+
+
+function renderMission(){
+
+  const area =
+    document.getElementById(
+      "mission-area"
+    );
+
+
+  if(!area){
+    return;
+  }
+
+
+  checkMissionProgress();
+
+
+  const mission =
+    getMonthMission();
+
+
+  const count =
+    getMissionCount();
+
+
+  const missions = [
+
+    {
+      icon:"💸",
+      title:"支出を1件記録する",
+      done:mission.record
+    },
+
+    {
+      icon:"💰",
+      title:"貯金を1回する",
+      done:mission.save
+    },
+
+    {
+      icon:"📝",
+      title:"3件以上記録する",
+      done:mission.three
+    }
+
+  ];
+
+
+  let html = `
+
+    <div style="
+      padding:12px;
+      border:2px dashed #aaa;
+      border-radius:14px;
+      text-align:center;
+      margin-bottom:15px;
+    ">
+
+      <div style="font-size:13px;">
+        ${formatMonthJP(data.selectedMonth)}
+        のミッション
+      </div>
+
+      <div style="
+        font-size:22px;
+        font-weight:bold;
+        margin-top:4px;
+      ">
+        ${count} / 3 CLEAR
+      </div>
+
+      <div style="
+        height:10px;
+        background:#eee;
+        border-radius:999px;
+        overflow:hidden;
+        margin-top:8px;
+      ">
+
+        <div style="
+          width:${(count / 3) * 100}%;
+          height:100%;
+          background:#9b8acb;
+          border-radius:999px;
+        "></div>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  missions.forEach(
+    item => {
+
+      html += `
+
+        <div style="
+          display:flex;
+          align-items:center;
+          gap:10px;
+          padding:12px 4px;
+          border-bottom:1px dashed #aaa;
+        ">
+
+          <div style="
+            font-size:25px;
+          ">
+            ${
+              item.done
+                ? "✅"
+                : item.icon
+            }
+          </div>
+
+          <div style="
+            flex:1;
+            font-weight:bold;
+          ">
+            ${item.title}
+          </div>
+
+          <div style="
+            font-size:13px;
+            opacity:.7;
+          ">
+            ${
+              item.done
+                ? "CLEAR!"
+                : "未達成"
+            }
+          </div>
+
+        </div>
+
+      `;
+
+    }
+  );
+
+
+  if(count === 3){
+
+    html += `
+
+      <div style="
+        margin-top:15px;
+        padding:12px;
+        border-radius:14px;
+        text-align:center;
+        font-weight:bold;
+      ">
+        🎉 ミッションコンプリート！
+        <br>
+        にゃんこも喜んでるにゃ😽
+      </div>
+
+    `;
+
+  }
+
+
+  area.innerHTML =
+    html;
+
+}
+
+
+/* =========================
+   STEP10 UPDATE
+========================= */
+
+
+/* 記録後 */
+
+const oldSaveRecordStep10 =
+  saveRecord;
+
+
+saveRecord = function(){
+
+  oldSaveRecordStep10();
+
+  if(
+    typeof renderMission ===
+    "function"
+  ){
+
+    renderMission();
+
+  }
+
+};
+
+
+/* 削除後 */
+
+const oldDeleteRecordStep10 =
+  deleteRecord;
+
+
+deleteRecord = function(id){
+
+  oldDeleteRecordStep10(id);
+
+  if(
+    typeof renderMission ===
+    "function"
+  ){
+
+    renderMission();
+
+  }
+
+};
+
+
+/* 月変更 */
+
+const oldChangeMonthStep10 =
+  changeMonth;
+
+
+changeMonth = function(offset){
+
+  oldChangeMonthStep10(offset);
+
+  if(
+    typeof renderMission ===
+    "function"
+  ){
+
+    renderMission();
+
+  }
+
+};
+
+
+/* 今月へ戻る */
+
+const oldGoToCurrentMonthStep10 =
+  goToCurrentMonth;
+
+
+goToCurrentMonth = function(){
+
+  oldGoToCurrentMonthStep10();
+
+  if(
+    typeof renderMission ===
+    "function"
+  ){
+
+    renderMission();
+
+  }
+
+};
+
+
+/* 初期表示 */
+
+createMissionArea();
+
+renderMission();
+
+
+/* DEBUG */
+
+console.log(
+  "🐾 現在のdata.transfers:",
+  data.transfers
+);
+
+console.log(
+  "🐾 現在のdata.accounts:",
+  data.accounts
+);
+
+/* =========================
+   STEP11 🏆 ACHIEVEMENTS
+========================= */
+
+const achievementList = [
+
+  {
+    id:"first_record",
+    icon:"🌱",
+    name:"はじめの一歩",
+    description:"初めてお金を記録したにゃ",
+    condition:function(){
+      return data.records.length >= 1;
+    }
+  },
+
+  {
+    id:"first_save",
+    icon:"💰",
+    name:"貯金デビュー",
+    description:"初めて貯金口座へお金を移したにゃ",
+    condition:function(){
+
+      return (
+        Array.isArray(data.transfers) &&
+        data.transfers.some(
+          transfer =>
+            transfer.to === "savings"
+        )
+      );
+
+    }
+  },
+
+  {
+    id:"record_10",
+    icon:"📝",
+    name:"こつこつにゃんこ",
+    description:"10件の記録を残したにゃ",
+    condition:function(){
+      return data.records.length >= 10;
+    }
+  },
+
+  {
+    id:"record_30",
+    icon:"📚",
+    name:"家計簿マスター",
+    description:"30件の記録を残したにゃ",
+    condition:function(){
+      return data.records.length >= 30;
+    }
+  },
+
+  {
+    id:"goal_first",
+    icon:"🎯",
+    name:"目標スタート",
+    description:"お金の目的を1つ作ったにゃ",
+    condition:function(){
+      return (
+        Array.isArray(data.goals) &&
+        data.goals.length >= 1
+      );
+    }
+  },
+
+  {
+  id:"goal_clear",
+  icon:"🏆",
+  name:"目標達成にゃ",
+  description:"お金の目的を1つ達成したにゃ",
+  condition:function(){
+
+    if(!Array.isArray(data.goals)){
+      return false;
+    }
+
+    return data.goals.some(goal => {
+
+      const current =
+        Number(
+          goal.current ??
+          goal.saved ??
+          goal.amount ??
+          0
+        );
+
+      const target =
+        Number(
+          goal.target ??
+          goal.goal ??
+          0
+        );
+
+      return (
+        target > 0 &&
+        current >= target
+      );
+
+    });
+
+  }
+},
+
+  {
+    id:"level_10",
+    icon:"🐈",
+    name:"にゃんこ成長中",
+    description:"にゃんこがLv10になったにゃ",
+    condition:function(){
+      return Number(data.cat.level || 1) >= 10;
+    }
+  },
+
+  {
+    id:"level_30",
+    icon:"😻",
+    name:"伝説のにゃんこ",
+    description:"にゃんこがLv30になったにゃ",
+    condition:function(){
+      return Number(data.cat.level || 1) >= 30;
+    }
+  }
+
+];
+
+function checkAchievements(){
+
+  achievementList.forEach(
+    achievement => {
+
+      if(
+        achievement.condition() &&
+        !data.achievements[achievement.id]
+      ){
+
+        data.achievements[
+          achievement.id
+        ] = {
+          unlockedAt:
+            new Date().toISOString()
+        };
+
+      }
+
+    }
+  );
+
+  saveData();
+
+}
+
+
+function renderAchievements(){
+
+  const area =
+    document.getElementById(
+      "achievement-area"
+    );
+
+  if(!area){
+    return;
+  }
+
+  checkAchievements();
+
+  let unlockedCount = 0;
+
+  achievementList.forEach(
+    achievement => {
+
+      if(
+        data.achievements[
+          achievement.id
+        ]
+      ){
+
+        unlockedCount++;
+
+      }
+
+    }
+  );
+
+
+  let html = `
+
+    <div style="
+      padding:12px;
+      border:2px dashed #aaa;
+      border-radius:14px;
+      text-align:center;
+      margin-bottom:15px;
+    ">
+
+      <div style="
+        font-size:13px;
+      ">
+        にゃんこ実績
+      </div>
+
+      <div style="
+        font-size:22px;
+        font-weight:bold;
+        margin-top:4px;
+      ">
+        ${unlockedCount}
+        /
+        ${achievementList.length}
+        CLEAR
+      </div>
+
+    </div>
+
+  `;
+
+
+  achievementList.forEach(
+    achievement => {
+
+      const unlocked =
+        Boolean(
+          data.achievements[
+            achievement.id
+          ]
+        );
+
+
+      html += `
+
+        <div style="
+          display:flex;
+          align-items:center;
+          gap:12px;
+          padding:12px 4px;
+          border-bottom:1px dashed #aaa;
+          opacity:${unlocked ? "1" : ".45"};
+        ">
+
+          <div style="
+            width:48px;
+            height:48px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:28px;
+            border-radius:12px;
+            background:
+              ${unlocked
+                ? "#f5eefe"
+                : "#eeeeee"};
+          ">
+
+            ${
+              unlocked
+                ? achievement.icon
+                : "🔒"
+            }
+
+          </div>
+
+
+          <div style="
+            flex:1;
+          ">
+
+            <div style="
+              font-weight:bold;
+            ">
+              ${achievement.name}
+            </div>
+
+            <div style="
+              font-size:12px;
+              margin-top:3px;
+              opacity:.8;
+            ">
+              ${achievement.description}
+            </div>
+
+          </div>
+
+
+          <div style="
+            font-size:12px;
+            font-weight:bold;
+          ">
+
+            ${
+              unlocked
+                ? "CLEAR!"
+                : "未達成"
+            }
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+  );
+
+
+  area.innerHTML =
+    html;
+
+}
+
+function createAchievementArea(){
+
+  if(
+    document.getElementById(
+      "achievement-card"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  const card =
+    document.createElement(
+      "div"
+    );
+
+
+  card.className =
+    "card";
+
+
+  card.id =
+    "achievement-card";
+
+
+  card.innerHTML = `
+
+    <h2>🏆 にゃんこ実績</h2>
+
+    <div
+      id="achievement-area"
+      style="margin-top:15px;"
+    ></div>
+
+  `;
+
+
+  const mission =
+    document.getElementById(
+      "mission-card"
+    );
+
+
+  const room =
+    document.getElementById(
+      "room"
+    );
+
+
+  if(mission){
+
+    mission.parentNode.insertBefore(
+      card,
+      mission.nextSibling
+    );
+
+  }else if(room){
+
+    room.parentNode.insertBefore(
+      card,
+      room
+    );
+
+  }
+
+}
+
+createAchievementArea();
+renderAchievements();
+
+/* =========================
+   STEP12 🎁 CAT REWARD
+========================= */
+
+const catRewards = [
+
+  {
+    icon:"🐟",
+    title:"おさかなゲット！",
+    message:"にゃんこからのお礼にゃ！",
+    exp:30
+  },
+
+  {
+    icon:"🧶",
+    title:"毛糸玉ゲット！",
+    message:"遊んでほしいにゃ〜！",
+    exp:40
+  },
+
+  {
+    icon:"🍪",
+    title:"おやつゲット！",
+    message:"こつこつ頑張ったご褒美にゃ！",
+    exp:50
+  },
+
+  {
+    icon:"💎",
+    title:"キラキラ発見！",
+    message:"すごいにゃ！大事にするにゃ！",
+    exp:80
+  },
+
+  {
+    icon:"🎀",
+    title:"かわいいリボン！",
+    message:"これ、似合うと思うにゃ？",
+    exp:100
+  },
+
+  {
+    icon:"🌟",
+    title:"にゃんこスター！",
+    message:"今日は特別大サービスにゃ！",
+    exp:150
+  }
+
+];
+
+
+function giveCatReward(){
+
+  const reward =
+    catRewards[
+      Math.floor(
+        Math.random()
+        * catRewards.length
+      )
+    ];
+
+
+  addExp(reward.exp);
+
+
+  const modal =
+    document.createElement("div");
+
+
+  modal.id =
+    "cat-reward-modal";
+
+
+  modal.style.cssText = `
+    position:fixed;
+    inset:0;
+    background:rgba(37,35,68,.65);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    padding:20px;
+  `;
+
+
+  modal.innerHTML = `
+
+    <div style="
+      width:min(360px,100%);
+      background:#fff;
+      border:3px solid #252344;
+      border-radius:20px;
+      padding:25px;
+      text-align:center;
+      box-shadow:6px 6px 0 #252344;
+    ">
+
+      <div style="
+        font-size:60px;
+        margin-bottom:10px;
+      ">
+        ${reward.icon}
+      </div>
+
+      <div style="
+        font-size:12px;
+        opacity:.7;
+        margin-bottom:5px;
+      ">
+        🎁 にゃんこからプレゼント！
+      </div>
+
+      <div style="
+        font-size:22px;
+        font-weight:bold;
+        margin-bottom:10px;
+      ">
+        ${reward.title}
+      </div>
+
+      <div style="
+        font-size:14px;
+        margin-bottom:15px;
+      ">
+        ${reward.message}
+      </div>
+
+      <div style="
+        display:inline-block;
+        padding:7px 14px;
+        border-radius:999px;
+        background:#f1eafa;
+        font-weight:bold;
+        margin-bottom:18px;
+      ">
+        ⭐ EXP +${reward.exp}
+      </div>
+
+      <br>
+
+      <button
+        onclick="
+          document
+            .getElementById('cat-reward-modal')
+            .remove()
+        "
+        style="
+          border:0;
+          padding:10px 25px;
+          border-radius:999px;
+          background:#252344;
+          color:white;
+          font-weight:bold;
+          cursor:pointer;
+        "
+      >
+        ありがとう🐈‍⬛
+      </button>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(
+    modal
+  );
+
+}
+
+function giveAchievementReward(){
+
+  if(!data.rewardHistory){
+    data.rewardHistory = {};
+  }
+
+  let newReward = false;
+
+
+  achievementList.forEach(
+    achievement => {
+
+      const unlocked =
+        Boolean(
+          data.achievements[
+            achievement.id
+          ]
+        );
+
+      if(
+        unlocked &&
+        !data.rewardHistory[
+          "achievement_" +
+          achievement.id
+        ]
+      ){
+
+        data.rewardHistory[
+          "achievement_" +
+          achievement.id
+        ] = true;
+
+        newReward = true;
+
+      }
+
+    }
+  );
+
+
+  if(newReward){
+
+    saveData();
+
+    setTimeout(
+      () => {
+        giveCatReward();
+      },
+      300
+    );
+
+  }
+
+}
+
+function giveMissionReward(){
+
+  if(!data.rewardHistory){
+    data.rewardHistory = {};
+  }
+
+
+  const mission =
+    getMonthMission();
+
+
+  const count =
+    getMissionCount();
+
+
+  if(
+    count === 3 &&
+    !data.rewardHistory[
+      "mission_" +
+      data.selectedMonth
+    ]
+  ){
+
+    data.rewardHistory[
+      "mission_" +
+      data.selectedMonth
+    ] = true;
+
+
+    saveData();
+
+
+    setTimeout(
+      () => {
+        giveCatReward();
+      },
+      500
+    );
+
+  }
+
+}
+
+function checkCatRewards(){
+
+  giveAchievementReward();
+
+  giveMissionReward();
+
+}
+
+function checkCatRewards(){
+
+  giveAchievementReward();
+
+  giveMissionReward();
+
+}
+
+/* STEP12 REWARD HOOK */
+
+const oldRenderAchievementsStep12 = renderAchievements;
+
+renderAchievements = function(){
+
+  oldRenderAchievementsStep12();
+
+  if(typeof checkCatRewards === "function"){
+    checkCatRewards();
+  }
+
+};
+
+
+const oldRenderMissionStep12 = renderMission;
+
+renderMission = function(){
+
+  oldRenderMissionStep12();
+
+  if(typeof checkCatRewards === "function"){
+    checkCatRewards();
+  }
+
+};
+
+/* =========================
+   STEP13 🐈 にゃんこ進捗スペース
+========================= */
+
+function getCatProgressState(percent){
+
+  if(percent >= 100){
+    return {
+      icon:"😻",
+      message:"目標達成！にゃんこも大よろこびです🎉"
+    };
+  }
+
+  if(percent >= 75){
+    return {
+      icon:"😸",
+      message:"もうすぐ達成！にゃんこがそわそわしています✨"
+    };
+  }
+
+  if(percent >= 50){
+    return {
+      icon:"🐈‍⬛🧶",
+      message:"半分まできました。にゃんこが遊び始めました🐾"
+    };
+  }
+
+  if(percent >= 25){
+    return {
+      icon:"🐈‍⬛",
+      message:"少しずつ貯まっています。にゃんこが起きました。"
+    };
+  }
+
+  return {
+    icon:"🐈‍⬛💤",
+    message:"まだまだこれから。にゃんこは気持ちよくお昼寝中です。"
+  };
+
+}
+
+
+function renderCatProgress(){
+
+  let card =
+    document.getElementById(
+      "cat-progress-card"
+    );
+
+  if(!card){
+
+    card =
+      document.createElement("div");
+
+    card.className = "card";
+
+    card.id =
+      "cat-progress-card";
+
+    const goalArea =
+      document.getElementById(
+        "goalArea"
+      );
+
+    const analysis =
+      document.getElementById(
+        "selected-month-analysis"
+      );
+
+    if(goalArea){
+
+      goalArea.parentNode.insertBefore(
+        card,
+        goalArea.nextSibling
+      );
+
+    }else if(analysis){
+
+      analysis.parentNode.insertBefore(
+        card,
+        analysis.nextSibling
+      );
+
+    }else{
+
+      document.body.appendChild(card);
+
+    }
+
+  }
+
+
+  if(
+    !Array.isArray(data.goals) ||
+    data.goals.length === 0
+  ){
+
+    card.innerHTML = `
+      <h2>🐈 にゃんこの進捗スペース</h2>
+
+      <div style="
+        text-align:center;
+        padding:25px 10px;
+        font-size:14px;
+      ">
+        🎯 まずは目標を作ってみよう！
+        <br>
+        <span style="font-size:45px;">
+          🐈‍⬛💤
+        </span>
+        <br>
+        にゃんこがお昼寝しながら待っています。
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  let html = `
+    <h2>🐈 にゃんこの進捗スペース</h2>
+    <div style="
+      font-size:12px;
+      opacity:.7;
+      margin-bottom:15px;
+    ">
+      目標に近づくほど、にゃんこも元気になるにゃ🐾
+    </div>
+  `;
+
+
+  data.goals.forEach(goal => {
+
+    const target =
+      Number(
+        goal.target || 0
+      );
+
+    const current =
+      Number(
+        goal.current ??
+        goal.saved ??
+        goal.amount ??
+        0
+      );
+
+    if(target <= 0){
+      return;
+    }
+
+
+    const percent =
+      Math.min(
+        100,
+        Math.round(
+          current / target * 100
+        )
+      );
+
+
+    const state =
+      getCatProgressState(
+        percent
+      );
+
+
+    html += `
+
+      <div style="
+        margin-bottom:25px;
+        padding:15px;
+        border:2px dashed #c9bfdc;
+        border-radius:16px;
+        background:#faf8ff;
+      ">
+
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          font-weight:bold;
+          margin-bottom:8px;
+        ">
+
+          <span>
+            ${goal.icon || "🎯"}
+            ${goal.name || "目標"}
+          </span>
+
+          <span>
+            ${percent}%
+          </span>
+
+        </div>
+
+
+        <div style="
+          font-size:13px;
+          margin-bottom:8px;
+        ">
+          ¥${current.toLocaleString()}
+          /
+          ¥${target.toLocaleString()}
+        </div>
+
+
+        <div style="
+          width:100%;
+          height:18px;
+          background:#e8e3ef;
+          border-radius:999px;
+          overflow:hidden;
+          border:2px solid #252344;
+        ">
+
+          <div style="
+            width:${percent}%;
+            height:100%;
+            background:#b9a4df;
+            transition:width .4s;
+          "></div>
+
+        </div>
+
+
+        <div style="
+          text-align:center;
+          font-size:48px;
+          margin-top:12px;
+        ">
+          ${state.icon}
+        </div>
+
+
+        <div style="
+          text-align:center;
+          font-size:12px;
+          line-height:1.7;
+        ">
+          ${state.message}
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+
+  card.innerHTML =
+    html;
+
+}
+
+
+renderCatProgress();
+
+/* STEP13 UPDATE */
+
+const oldAddMoneyToGoalStep13 =
+  typeof addMoneyToGoal === "function"
+    ? addMoneyToGoal
+    : null;
+
+if(oldAddMoneyToGoalStep13){
+
+  addMoneyToGoal = function(){
+
+    oldAddMoneyToGoalStep13.apply(
+      this,
+      arguments
+    );
+
+    if(
+      typeof renderCatProgress ===
+      "function"
+    ){
+      renderCatProgress();
+    }
+
+  };
+
+}
+
+
+const oldRenderGoalsStep13 =
+  typeof renderGoals === "function"
+    ? renderGoals
+    : null;
+
+if(oldRenderGoalsStep13){
+
+  renderGoals = function(){
+
+    oldRenderGoalsStep13.apply(
+      this,
+      arguments
+    );
+
+    if(
+      typeof renderCatProgress ===
+      "function"
+    ){
+      renderCatProgress();
+    }
+
+  };
+
+}
+
+/* STEP13 🐈 CAT NAME */
+
+if(
+  typeof data.catName !== "string"
+){
+  data.catName = "";
+}
+
+function saveCatName(){
+
+  const input =
+    document.getElementById(
+      "cat-name-input"
+    );
+
+  if(!input) return;
+
+  const name =
+    input.value.trim();
+
+  if(!name){
+    showToast("名前を入力してにゃ🐈");
+    return;
+  }
+
+  data.catName =
+    name.slice(0,12);
+
+  saveData();
+
+  renderCatName();
+  renderCatProgress();
+
+  showToast(
+    data.catName +
+    "って呼んでほしいにゃ！🐈‍⬛💗"
+  );
+
+}
+
+
+function renderCatName(){
+
+  const area =
+    document.getElementById(
+      "cat-name-area"
+    );
+
+  if(!area) return;
+
+  const name =
+    data.catName || "";
+
+  area.innerHTML = `
+
+    <div style="
+      text-align:center;
+      margin-bottom:15px;
+    ">
+
+      <div style="
+        font-size:12px;
+        opacity:.7;
+        margin-bottom:5px;
+      ">
+        🐈 にゃんこの名前
+      </div>
+
+      <div style="
+        font-size:22px;
+        font-weight:bold;
+        margin-bottom:12px;
+      ">
+        ${
+          name
+          ? "「" + name + "」"
+          : "まだ決まってないにゃ"
+        }
+      </div>
+
+      <div style="
+        display:flex;
+        gap:8px;
+        justify-content:center;
+      ">
+
+        <input
+          id="cat-name-input"
+          type="text"
+          maxlength="12"
+          placeholder="名前を入力"
+          value="${name}"
+          style="
+            width:180px;
+            padding:10px;
+            border:2px solid #252344;
+            border-radius:12px;
+            box-sizing:border-box;
+          "
+        >
+
+        <button
+          onclick="saveCatName()"
+          style="
+            border:2px solid #252344;
+            border-radius:12px;
+            padding:8px 14px;
+            background:#f1eafa;
+            font-weight:bold;
+            cursor:pointer;
+          "
+        >
+          決定🐾
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+function createCatNameArea(){
+
+  if(
+    document.getElementById(
+      "cat-name-card"
+    )
+  ){
+    renderCatName();
+    return;
+  }
+
+  const card =
+    document.createElement("div");
+
+  card.className =
+    "card";
+
+  card.id =
+    "cat-name-card";
+
+  card.innerHTML = `
+    <h2>🐈 にゃんこの名前</h2>
+    <div id="cat-name-area"></div>
+  `;
+
+  const progress =
+    document.getElementById(
+      "cat-progress-card"
+    );
+
+  if(progress){
+
+    progress.parentNode.insertBefore(
+      card,
+      progress
+    );
+
+  }else{
+
+    document.body.appendChild(
+      card
+    );
+
+  }
+
+  renderCatName();
+
+}
+
+
+createCatNameArea();
+
+function getCatProgressState(percent){
+
+  const name =
+    data.catName || "にゃんこ";
+
+  if(percent >= 100){
+    return {
+      icon:"😻",
+      message:
+        name +
+        "も大よろこび！目標達成です🎉"
+    };
+  }
+
+  if(percent >= 75){
+    return {
+      icon:"😸",
+      message:
+        name +
+        "がそわそわしています✨"
+    };
+  }
+
+  if(percent >= 50){
+    return {
+      icon:"🐈‍⬛🧶",
+      message:
+        name +
+        "が遊び始めました🐾"
+    };
+  }
+
+  if(percent >= 25){
+    return {
+      icon:"🐈‍⬛",
+      message:
+        name +
+        "が起きました。少しずつ貯まっています。"
+    };
+  }
+
+  return {
+    icon:"🐈‍⬛💤",
+    message:
+      name +
+      "は気持ちよくお昼寝中です。"
+  };
+
+}
+
+/* STEP13 🐈 FIRST NAME SETUP */
+/* =========================
+   STEP13 🐈 FIRST CAT ADOPTION
+========================= */
+
+function showFirstCatAdoption(){
+
+ 
+
+  if(data.catName){
+    return;
+  }
+
+  const cats = [
+    {
+      id:"black",
+      icon:"🐈‍⬛",
+      name:"くろねこ",
+      description:"ちょっぴりクールな相棒"
+    },
+    {
+      id:"white",
+      icon:"🐈",
+      name:"しろねこ",
+      description:"のんびりやさしい子"
+    },
+    {
+      id:"gray",
+      icon:"🩶",
+      name:"グレーねこ",
+      description:"落ち着いたおっとりさん"
+    },
+    {
+      id:"hachi",
+      icon:"🐱",
+      name:"ハチワレ",
+      description:"元気いっぱいな子"
+    },
+    {
+      id:"calico",
+      icon:"🤎",
+      name:"みけねこ",
+      description:"マイペースな子"
+    }
+  ];
+
+  let selectedCat = "black";
+
+  const modal =
+    document.createElement("div");
+
+  modal.id =
+    "first-cat-adoption-modal";
+
+  modal.style.cssText = `
+    position:fixed;
+    inset:0;
+    background:rgba(37,35,68,.72);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:10000;
+    padding:20px;
+    overflow-y:auto;
+  `;
+
+  let catHTML = "";
+
+  cats.forEach(cat => {
+
+    catHTML += `
+
+      <button
+        type="button"
+        class="first-cat-choice"
+        data-cat="${cat.id}"
+        style="
+          border:3px solid #252344;
+          border-radius:18px;
+          background:#fff;
+          padding:12px 8px;
+          cursor:pointer;
+          text-align:center;
+          transition:.15s;
+        "
+      >
+
+        <div style="
+          font-size:48px;
+          line-height:1.1;
+        ">
+          ${cat.icon}
+        </div>
+
+        <div style="
+          font-weight:bold;
+          margin-top:5px;
+        ">
+          ${cat.name}
+        </div>
+
+        <div style="
+          font-size:10px;
+          opacity:.65;
+          margin-top:4px;
+        ">
+          ${cat.description}
+        </div>
+
+      </button>
+
+    `;
+
+  });
+
+
+  modal.innerHTML = `
+
+    <div style="
+      width:min(430px,100%);
+      background:#fff;
+      border:3px solid #252344;
+      border-radius:24px;
+      padding:25px 20px;
+      text-align:center;
+      box-shadow:7px 7px 0 #252344;
+    ">
+
+      <div style="
+        font-size:12px;
+        opacity:.7;
+        margin-bottom:5px;
+      ">
+        🐾 どっとにゃんへようこそ！
+      </div>
+
+      <div style="
+        font-size:23px;
+        font-weight:bold;
+        margin-bottom:8px;
+      ">
+        にゃんこをお迎えしよう
+      </div>
+
+      <div style="
+        font-size:12px;
+        line-height:1.7;
+        margin-bottom:18px;
+      ">
+        一緒に家計簿を頑張ってくれる<br>
+        にゃんこを1匹選んでね🐈
+      </div>
+
+      <div style="
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:8px;
+        margin-bottom:20px;
+      ">
+        ${catHTML}
+      </div>
+
+      <input
+        id="first-cat-name-input"
+        type="text"
+        maxlength="12"
+        placeholder="この子の名前を入力"
+        style="
+          width:100%;
+          box-sizing:border-box;
+          padding:12px;
+          border:2px solid #252344;
+          border-radius:12px;
+          font-size:15px;
+          text-align:center;
+          margin-bottom:12px;
+        "
+      >
+
+      <button
+        onclick="confirmFirstCatAdoption()"
+        style="
+          width:100%;
+          border:2px solid #252344;
+          border-radius:14px;
+          padding:13px;
+          background:#f1eafa;
+          font-weight:bold;
+          font-size:15px;
+          cursor:pointer;
+        "
+      >
+        この子と暮らす🐾
+      </button>
+
+    </div>
+
+  `;
+
+  document.body.appendChild(modal);
+
+
+  const choices =
+    modal.querySelectorAll(
+      ".first-cat-choice"
+    );
+
+  choices.forEach(choice => {
+
+    choice.addEventListener(
+      "click",
+      function(){
+
+        choices.forEach(item => {
+
+          item.style.background =
+            "#fff";
+
+          item.style.transform =
+            "scale(1)";
+
+        });
+
+        this.style.background =
+          "#f1eafa";
+
+        this.style.transform =
+          "scale(1.04)";
+
+        selectedCat =
+          this.dataset.cat;
+
+        modal.dataset.selectedCat =
+          selectedCat;
+
+      }
+    );
+
+  });
+
+
+  modal.dataset.selectedCat =
+    selectedCat;
+
+}
+
+
+function confirmFirstCatAdoption(){
+
+  const modal =
+    document.getElementById(
+      "first-cat-adoption-modal"
+    );
+
+  const input =
+    document.getElementById(
+      "first-cat-name-input"
+    );
+
+  if(!modal || !input){
+    return;
+  }
+
+  const name =
+    input.value.trim();
+
+  if(!name){
+
+    showToast(
+      "この子の名前を決めてにゃ🐈"
+    );
+
+    input.focus();
+
+    return;
+
+  }
+
+
+  const selectedCat =
+    modal.dataset.selectedCat ||
+    "black";
+
+
+  data.catSkin =
+    selectedCat;
+
+  data.catName =
+    name.slice(0,12);
+
+
+  saveData();
+
+
+  modal.remove();
+
+
+  renderCatName();
+  renderCatProgress();
+
+  if(
+    typeof renderCat ===
+    "function"
+  ){
+    renderCat();
+  }
+
+  if(
+    typeof renderCatCollection ===
+    "function"
+  ){
+    renderCatCollection();
+  }
+
+
+  showToast(
+    data.catName +
+    "をお迎えしたにゃ！🐾💗"
+  );
+
+}
+
+
+showFirstCatAdoption();
+
+
+
+</script>
+
+<!-- =========================
+     STEP15 🐈 にゃんこページ
+========================= -->
+
+<!-- =========================
+     STEP16 📱 APP PAGES
+========================= -->
+
+
+<script>
+
+/* =========================
+   STEP15 🐈 CAT PAGE
+========================= */
+
+function renderCatPage(){
+
+  const page =
+    document.getElementById(
+      "catPage"
+    );
+
+  if(!page){
+    return;
+  }
+
+
+  const cat =
+    catCollection.find(
+      item =>
+        item.id === data.catSkin
+    );
+
+
+  if(cat){
+
+    document.getElementById(
+      "catPageIcon"
+    ).textContent =
+      cat.icon;
+
+    document.getElementById(
+      "catPageName"
+    ).textContent =
+      data.catName ||
+      cat.name;
+
+    document.getElementById(
+      "catPageLevel"
+    ).textContent =
+      data.cat.level || 1;
+
+  }
+
+
+  const collection =
+    document.getElementById(
+      "catPageCollection"
+    );
+
+  if(!collection){
+    return;
+  }
+
+
+  collection.innerHTML = "";
+
+
+  catCollection.forEach(cat => {
+
+    const owned =
+      isCatOwned(cat.id);
+
+    const unlocked =
+      Number(data.cat.level || 1)
+      >= Number(cat.level || 1);
+
+
+    if(!unlocked){
+      return;
+    }
+
+
+    const selected =
+      data.catSkin === cat.id;
+
+
+    const card =
+      document.createElement("div");
+
+
+    card.style.cssText = `
+      border:2px solid #252344;
+      border-radius:15px;
+      padding:12px 8px;
+      text-align:center;
+      background:
+        ${
+          selected
+            ? "#f1eafa"
+            : "#fff"
+        };
+    `;
+
+
+    card.innerHTML = `
+
+      <div
+        style="
+          font-size:40px;
+          line-height:1;
+          margin-bottom:6px;
+        "
+      >
+        ${cat.icon}
+      </div>
+
+      <div
+        style="
+          font-size:12px;
+          font-weight:bold;
+        "
+      >
+        ${cat.name}
+      </div>
+
+      <div
+        style="
+          font-size:9px;
+          color:#817ca5;
+          margin-top:4px;
+        "
+      >
+        ${
+          selected
+            ? "いま一緒にいる🐾"
+            : owned
+            ? "お迎え済み"
+            : "お迎えする🐾"
+        }
+      </div>
+
+    `;
+
+
+    if(owned){
+
+      card.style.cursor =
+        "pointer";
+
+
+      card.onclick = () => {
+
+        adoptCat(cat.id);
+
+        renderCatPage();
+
+      };
+
+    }
+
+
+    collection.appendChild(
+      card
+    );
+
+  });
+
+}
+
+
+/* =========================
+   📝 名前変更
+========================= */
+
+function changeCatName(){
+
+  const current =
+    data.catName || "";
+
+
+  const newName =
+    prompt(
+      "にゃんこの名前を入力してにゃ🐾",
+      current
+    );
+
+
+  if(newName === null){
+    return;
+  }
+
+
+  const name =
+    newName.trim();
+
+
+  if(!name){
+
+    showToast(
+      "名前を入力してにゃ🐈"
+    );
+
+    return;
+  }
+
+
+  data.catName =
+    name.slice(0,12);
+
+
+  saveData();
+
+  renderCatName();
+  renderCatPage();
+  renderCatProgress();
+
+
+  showToast(
+    "名前を変更したにゃ！🐾💗"
+  );
+
+}
+
+
+/* =========================
+   🔄 猫ページ更新
+========================= */
+
+function updateCatPage(){
+
+  renderCatPage();
+
+}
+
+/* =========================
+   📱 PAGE SWITCH
+========================= */
+/* =========================
+   📱 PAGE SWITCH
+========================= */
+
+function showAppPage(page){
+
+  const pages = {
+
+    home:
+      document.getElementById(
+        "appPageHome"
+      ),
+
+    record:
+      document.getElementById(
+        "appPageRecord"
+      ),
+
+    goal:
+      document.getElementById(
+        "appPageGoal"
+      ),
+
+    cat:
+      document.getElementById(
+        "catPage"
+      )
+
+  };
+
+
+  Object.keys(pages).forEach(key => {
+
+    const pageElement =
+      pages[key];
+
+    if(!pageElement){
+      return;
+    }
+
+    pageElement.style.display =
+      key === page
+        ? "block"
+        : "none";
+
+  });
+
+
+  if(page === "cat"){
+
+    renderCatPage();
+
+  }
+
+
+  if(page === "home"){
+
+    renderHomeTop();
+
+  }
+
+
+  window.scrollTo(0,0);
+
+}
+
+/* =========================
+   STEP17 🏠 HOME TOP DATA
+========================= */
+
+function renderHomeTop(){
+
+  const incomeEl =
+    document.getElementById(
+      "homeIncome"
+    );
+
+  const expenseEl =
+    document.getElementById(
+      "homeExpense"
+    );
+
+  const freeEl =
+    document.getElementById(
+      "homeFreeMoney"
+    );
+
+  if(
+    !incomeEl ||
+    !expenseEl ||
+    !freeEl
+  ){
+    return;
+  }
+
+  const records =
+    Array.isArray(data.records)
+      ? data.records
+      : [];
+
+  const now =
+    new Date();
+
+  const year =
+    now.getFullYear();
+
+  const month =
+    String(
+      now.getMonth() + 1
+    ).padStart(2,"0");
+
+  const currentMonth =
+    year + "-" + month;
+
+  let income = 0;
+  let expense = 0;
+
+  records.forEach(record => {
+
+    if(!record.date){
+      return;
+    }
+
+    const recordMonth =
+      String(record.date).slice(0,7);
+
+    if(recordMonth !== currentMonth){
+      return;
+    }
+
+    const amount =
+      Number(record.amount || 0);
+
+    if(record.type === "income"){
+      income += amount;
+    }
+
+    if(record.type === "expense"){
+      expense += amount;
+    }
+
+  });
+
+  const free =
+    income - expense;
+
+  incomeEl.textContent =
+    "¥" +
+    income.toLocaleString();
+
+  expenseEl.textContent =
+    "¥" +
+    expense.toLocaleString();
+
+  freeEl.textContent =
+    "¥" +
+    free.toLocaleString();
+
+}
+
+renderHomeTop();
+
+
+
+/* =========================
+   FINAL APP PAGE ORGANIZER
+========================= */
+function setupDotNyanPages(){
+
+  const app = document.querySelector(".app");
+  const home = document.getElementById("appPageHome");
+  const recordPage = document.getElementById("appPageRecord");
+  const goalPage = document.getElementById("appPageGoal");
+  const catPage = document.getElementById("catPage");
+
+  if(!app || !home || !recordPage || !goalPage || !catPage){
+    return;
+  }
+
+  /* ヘッダーを全ページ共通にする */
+  const header = app.querySelector(":scope > .header");
+  if(header){
+    header.id = "appHeader";
+    document.body.insertBefore(header, home);
+  }
+
+  /* 下部ナビを全ページ共通にする */
+  const nav = app.querySelector(":scope > .bottom-nav");
+  if(nav){
+    document.body.appendChild(nav);
+  }
+
+  /* ページ見出し */
+  if(!recordPage.querySelector(".app-page-title")){
+    recordPage.insertAdjacentHTML("afterbegin", `
+      <div class="app-page-title">
+        <div class="app-page-title-main">📖 RECORD</div>
+        <div class="app-page-title-sub">お金の記録をまとめて管理するページ</div>
+      </div>
+    `);
+  }
+
+  if(!goalPage.querySelector(".app-page-title")){
+    goalPage.insertAdjacentHTML("afterbegin", `
+      <div class="app-page-title">
+        <div class="app-page-title-main">🎯 GOAL</div>
+        <div class="app-page-title-sub">貯めたいものと進み具合をまとめるページ</div>
+      </div>
+    `);
+  }
+
+  /* 既存カードを役割ごとのページへ移動。IDは変えないので既存機能を維持。 */
+  const cards = Array.from(document.querySelectorAll(".card"));
+
+  cards.forEach(card => {
+    if(card.closest(".modal-bg") || card.closest("#appPageHome") || card.closest("#appPageRecord") || card.closest("#appPageGoal") || card.closest("#catPage")){
+      return;
+    }
+
+    const id = card.id || "";
+    const text = card.textContent || "";
+
+    /* 猫専用 */
+    if(id === "catCollectionArea" || id === "cat-name-card"){
+      catPage.appendChild(card);
+      return;
+    }
+
+    /* GOAL専用 */
+    if(
+      id === "budgetArea" ||
+      id === "month-selector-card" ||
+      id === "selected-month-analysis" ||
+      id === "monthly-history-card" ||
+      id === "mission-card" ||
+      id === "cat-progress-card" ||
+      id === "achievement-card" ||
+      id === "goals" ||
+      text.includes("お金の目的") ||
+      text.includes("目標")
+    ){
+      goalPage.appendChild(card);
+      return;
+    }
+
+    /* 古い部屋はCATページのコアから外す */
+    if(card.classList.contains("room-card") || id === "room-card"){
+      card.style.display = "none";
+      return;
+    }
+
+    /* 古い猫表示はCATページに重複させない */
+    if(card.querySelector("#cat") && card.querySelector("#expFill")){
+      card.style.display = "none";
+      return;
+    }
+
+    /* 記録系 */
+    recordPage.appendChild(card);
+  });
+
+  /* GOALカードが動的生成される前でも置き場所を確保 */
+  const goalCard = document.getElementById("goals")?.closest(".card");
+  if(goalCard && goalCard.parentElement !== goalPage){
+    goalPage.appendChild(goalCard);
+  }
+
+  /* HOMEに猫の状態を表示 */
+  let homeCat = document.getElementById("homeCatCard");
+  if(!homeCat){
+    homeCat = document.createElement("div");
+    homeCat.id = "homeCatCard";
+    homeCat.className = "home-cat-card";
+    home.insertBefore(homeCat, home.querySelector(".home-quick-grid") || null);
+  }
+
+  /* HOMEのクイックボタン */
+  let quick = home.querySelector(".home-quick-grid");
+  if(!quick){
+    quick = document.createElement("div");
+    quick.className = "home-quick-grid";
+    quick.innerHTML = `
+      <button type="button" onclick="showAppPage('record');openModal('expense')">💸 支出を記録</button>
+      <button type="button" onclick="showAppPage('record');openModal('income')">💰 収入を記録</button>
+      <button type="button" onclick="showAppPage('goal')">🎯 目標を見る</button>
+      <button type="button" onclick="showAppPage('cat')">🐈 猫を見る</button>
+    `;
+    home.appendChild(quick);
+  }
+
+  /* 古いアプリ本体は表示しない */
+  app.style.display = "none";
+
+  renderHomeCat();
+  showAppPage("home");
+}
+
+function renderHomeCat(){
+  const area = document.getElementById("homeCatCard");
+  if(!area || typeof getSelectedCat !== "function") return;
+
+  const icon = getSelectedCat();
+  const cat = typeof catCollection !== "undefined"
+    ? catCollection.find(item => item.id === data.catSkin)
+    : null;
+  const name = data.catName || (cat ? cat.name : "にゃんこ");
+  const level = data.cat?.level || 1;
+  const message = typeof getCatMessage === "function"
+    ? getCatMessage()
+    : "今日もいっしょにがんばろう🐾";
+
+  area.innerHTML = `
+    <div style="font-size:11px;color:#817ca5;">🐾 今日のにゃんこ</div>
+    <div class="home-cat-icon">${icon}</div>
+    <div class="home-cat-name">${escapeHtml(name)} <span style="font-size:11px;color:#817ca5;">Lv.${level}</span></div>
+    <div class="home-cat-message">${escapeHtml(message)}</div>
+  `;
+}
+
+/* 既存関数からの更新にも追従 */
+const originalRenderCat = renderCat;
+renderCat = function(){
+  originalRenderCat();
+  renderHomeCat();
+  if(typeof renderCatPage === "function") renderCatPage();
+};
+
+const originalSaveRecord = saveRecord;
+saveRecord = function(){
+  originalSaveRecord();
+  renderHomeTop();
+  renderHomeCat();
+};
+
+const originalDeleteRecord = deleteRecord;
+deleteRecord = function(id){
+  originalDeleteRecord(id);
+  renderHomeTop();
+  renderHomeCat();
+};
+
+setupDotNyanPages();
+</script>
+
+
+<script>
+/* =========================
+   DOT NYAN FINAL PAGE FIX
+   このブロックは既存機能を触らず、4ページ表示だけを確実に管理します
+========================= */
+(function(){
+  function initDotNyanPages(){
+    const home = document.getElementById('appPageHome');
+    const record = document.getElementById('appPageRecord');
+    const goal = document.getElementById('appPageGoal');
+    const cat = document.getElementById('catPage');
+    const app = document.querySelector('.app');
+    if(!home || !record || !goal || !cat || !app) return;
+
+    /* 共通ヘッダーをページの外へ */
+    let header = document.getElementById('appHeader');
+    if(!header){
+      header = null;
+      for(const child of Array.from(app.children)){
+        if(child.classList && child.classList.contains('header')){
+          header = child;
+          break;
+        }
+      }
+    }
+    if(header){
+      header.id = 'appHeader';
+      document.body.insertBefore(header, home);
+    }
+
+    /* 共通ナビをページの外へ */
+    let nav = document.querySelector('body > .bottom-nav');
+    if(!nav){
+      nav = app.querySelector('.bottom-nav');
+    }
+    if(nav){
+      document.body.appendChild(nav);
+      nav.style.display = 'grid';
+      nav.style.position = 'fixed';
+      nav.style.left = '50%';
+      nav.style.bottom = '0';
+      nav.style.transform = 'translateX(-50%)';
+      nav.style.width = '100%';
+      nav.style.maxWidth = '520px';
+      nav.style.zIndex = '9999';
+    }
+
+    /* ページ見出しを固定 */
+    if(!record.querySelector('.final-page-title')){
+      record.insertAdjacentHTML('afterbegin','<div class="final-page-title"><b>📖 RECORD</b><span>お金の記録</span></div>');
+    }
+    if(!goal.querySelector('.final-page-title')){
+      goal.insertAdjacentHTML('afterbegin','<div class="final-page-title"><b>🎯 GOAL</b><span>貯めたいものと進み具合</span></div>');
+    }
+    if(!cat.querySelector('.final-page-title')){
+      cat.insertAdjacentHTML('afterbegin','<div class="final-page-title"><b>🐈 CAT</b><span>いっしょに頑張るにゃんこ</span></div>');
+    }
+
+    /* 既存カードを4ページへ振り分ける */
+    const allCards = Array.from(document.querySelectorAll('.card'));
+    allCards.forEach(card => {
+      if(card.closest('.modal-bg')) return;
+      if(card === home || card === record || card === goal || card === cat) return;
+      if(card.closest('#appPageHome, #appPageRecord, #appPageGoal, #catPage')) return;
+
+      const id = card.id || '';
+      const text = card.textContent || '';
+
+      if(id === 'catCollectionArea' || id === 'cat-name-card'){
+        cat.appendChild(card);
+        return;
+      }
+
+      if(
+        id === 'budgetArea' ||
+        id === 'month-selector-card' ||
+        id === 'selected-month-analysis' ||
+        id === 'monthly-history-card' ||
+        id === 'mission-card' ||
+        id === 'cat-progress-card' ||
+        id === 'achievement-card' ||
+        text.includes('お金の目的') ||
+        text.includes('目標') ||
+        text.includes('予算') ||
+        text.includes('今月の分析') ||
+        text.includes('月別履歴') ||
+        text.includes('ミッション') ||
+        text.includes('実績')
+      ){
+        goal.appendChild(card);
+        return;
+      }
+
+      if(card.classList.contains('room-card') || id === 'room-card'){
+        card.style.display = 'none';
+        return;
+      }
+
+      if(card.querySelector('#cat') && card.querySelector('#expFill')){
+        card.style.display = 'none';
+        return;
+      }
+
+      record.appendChild(card);
+    });
+
+    /* 目標の親カードを必ずGOALへ */
+    const goalsEl = document.getElementById('goals');
+    if(goalsEl){
+      const parentCard = goalsEl.closest('.card');
+      if(parentCard && !parentCard.closest('#appPageGoal')) goal.appendChild(parentCard);
+    }
+
+    /* 旧アプリ本体は完全に隠す */
+    app.style.display = 'none';
+    app.setAttribute('aria-hidden','true');
+
+    /* HOMEの猫カード */
+    let homeCat = document.getElementById('finalHomeCat');
+    if(!homeCat){
+      homeCat = document.createElement('div');
+      homeCat.id = 'finalHomeCat';
+      homeCat.className = 'final-home-cat';
+      const quick = home.querySelector('.home-quick-grid');
+      if(quick) home.insertBefore(homeCat, quick);
+      else home.appendChild(homeCat);
+    }
+
+    /* クイックボタン */
+    let quick = home.querySelector('.final-quick-grid');
+    if(!quick){
+      quick = document.createElement('div');
+      quick.className = 'final-quick-grid';
+      quick.innerHTML = `
+        <button type="button" data-go="record">💸 支出を記録</button>
+        <button type="button" data-go="record-income">💰 収入を記録</button>
+        <button type="button" data-go="goal">🎯 目標を見る</button>
+        <button type="button" data-go="cat">🐈 猫を見る</button>
+      `;
+      home.appendChild(quick);
+    }
+    quick.querySelectorAll('[data-go]').forEach(btn=>{
+      if(btn.dataset.bound) return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click',()=>{
+        const action = btn.dataset.go;
+        if(action === 'record-income'){
+          window.showAppPage('record');
+          if(typeof openModal === 'function') openModal('income');
+        }else if(action === 'record'){
+          window.showAppPage('record');
+          if(typeof openModal === 'function') openModal('expense');
+        }else{
+          window.showAppPage(action);
+        }
+      });
+    });
+
+    /* ナビを確実にクリックできるようにする */
+    if(nav){
+      nav.querySelectorAll('.nav-item').forEach((item,index)=>{
+        if(item.dataset.finalBound) return;
+        item.dataset.finalBound = '1';
+        const pages = ['home','record','goal','cat'];
+        item.addEventListener('click',function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          window.showAppPage(pages[index]);
+        });
+      });
+    }
+
+    function refreshHomeCat(){
+      if(!homeCat) return;
+      let icon = '🐈‍⬛';
+      try{
+        if(typeof getSelectedCat === 'function') icon = getSelectedCat() || icon;
+      }catch(e){}
+      let name = (typeof data !== 'undefined' && data.catName) ? data.catName : 'にゃんこ';
+      let level = (typeof data !== 'undefined' && data.cat && data.cat.level) ? data.cat.level : 1;
+      let message = '今日もいっしょにがんばろう🐾';
+      try{
+        if(typeof getCatMessage === 'function') message = getCatMessage() || message;
+      }catch(e){}
+      homeCat.innerHTML = '<div class="final-home-cat-label">🐾 今日のにゃんこ</div><div class="final-home-cat-icon">'+icon+'</div><div class="final-home-cat-name">'+name+' <small>Lv.'+level+'</small></div><div class="final-home-cat-message">'+message+'</div>';
+    }
+
+    window.showAppPage = function(page){
+      const pages = {home,record,goal,cat};
+      Object.keys(pages).forEach(key=>{
+        pages[key].style.display = key === page ? 'block' : 'none';
+      });
+      document.body.classList.remove('dotnyan-page-home','dotnyan-page-record','dotnyan-page-goal','dotnyan-page-cat');
+      document.body.classList.add('dotnyan-page-'+page);
+      if(page === 'cat' && typeof renderCatPage === 'function'){
+        try{ renderCatPage(); }catch(e){}
+      }
+      if(page === 'home'){
+        if(typeof renderHomeTop === 'function'){
+          try{ renderHomeTop(); }catch(e){}
+        }
+        refreshHomeCat();
+      }
+      window.scrollTo({top:0,left:0,behavior:'instant'});
+    };
+
+    refreshHomeCat();
+    window.showAppPage('home');
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded',initDotNyanPages,{once:true});
+  }else{
+    initDotNyanPages();
+  }
+})();
+</script>
+<style>
+/* FINAL PAGE FIX */
+body{padding-bottom:78px;}
+.final-page-title{padding:8px 16px 14px;display:flex;flex-direction:column;gap:4px;}
+.final-page-title b{font-size:22px;}
+.final-page-title span{font-size:10px;color:#817ca5;}
+#appPageHome,#appPageRecord,#appPageGoal,#catPage{min-height:calc(100vh - 150px);box-sizing:border-box;}
+.final-home-cat{margin:16px;border:3px solid #252344;border-radius:20px;background:#fff0f7;padding:18px;text-align:center;box-shadow:5px 5px 0 #252344;}
+.final-home-cat-label{font-size:11px;color:#817ca5;}
+.final-home-cat-icon{font-size:64px;line-height:1;margin:8px 0;}
+.final-home-cat-name{font-size:18px;font-weight:bold;}
+.final-home-cat-name small{font-size:11px;color:#817ca5;font-weight:normal;}
+.final-home-cat-message{font-size:11px;color:#817ca5;margin-top:6px;}
+.final-quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px;}
+.final-quick-grid button{width:100%;min-height:48px;}
+</style>
+
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script>
+</body>
+</html>
